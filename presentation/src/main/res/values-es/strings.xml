@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">RIM</string>
+
+    <!-- Drawer sections -->
+    <string name="section_characters">Personajes</string>
+    <string name="section_episodes">Episodios</string>
+    <string name="section_locations">Ubicaciones</string>
+    <string name="action_logout">Cerrar sesión</string>
+
+    <!-- Login -->
+    <string name="login_title">Iniciar sesión</string>
+    <string name="login_hint_name">Nombre</string>
+    <string name="login_button">Entrar</string>
+
+    <!-- Common -->
+    <string name="state_loading">Cargando…</string>
+    <string name="state_error">Algo salió mal</string>
+    <string name="action_retry">Reintentar</string>
+    <string name="content_description_menu">Menú</string>
+</resources>

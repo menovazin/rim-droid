@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">RIM</string>
+
+    <!-- Drawer sections -->
+    <string name="section_characters">Characters</string>
+    <string name="section_episodes">Episodes</string>
+    <string name="section_locations">Locations</string>
+    <string name="action_logout">Logout</string>
+
+    <!-- Login -->
+    <string name="login_title">Sign in</string>
+    <string name="login_hint_name">Name</string>
+    <string name="login_button">Sign in</string>
+
+    <!-- Common -->
+    <string name="state_loading">Loading…</string>
+    <string name="state_error">Something went wrong</string>
+    <string name="action_retry">Retry</string>
+    <string name="content_description_menu">Menu</string>
+</resources>

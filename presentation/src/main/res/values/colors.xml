@@ -1,0 +1,5 @@
+<resources>
+    <color name="rim_primary">#375A8C</color>
+    <color name="rim_surface">#FFFFFF</color>
+    <color name="rim_on_surface">#1C1B1F</color>
+</resources>

@@ -1,0 +1,31 @@
+apply plugin: 'org.jetbrains.kotlinx.kover'
+
+def excludeClasses = [
+        // Compose UI / generated
+        "*ComposableSingletons*",
+        "*ComposeKt",
+        "*_Factory*", "*_Factory\$*",
+        "*Hilt_*", "*_Hilt*",
+        "*_GeneratedInjector", "*_HiltModules*",
+        "dagger.hilt.internal.*",
+        // DTO / mappers / di
+        "com.rim.droid.data.dto.*",
+        "com.rim.droid.data.mapper.*",
+        "*.di.*",
+]
+
+kover {
+    reports {
+        filters {
+            excludes {
+                androidGeneratedClasses()
+                classes(excludeClasses)
+            }
+        }
+    }
+}
+
+tasks.register("koverTask") {
+    description = "Runs kover and generates coverage reports"
+    dependsOn 'koverHtmlReportDebug'
+}
