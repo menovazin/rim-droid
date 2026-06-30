@@ -200,6 +200,7 @@ private fun RimDrawerContent(
 
             HorizontalDivider(
                 color = rimColors.textSecondary.copy(alpha = 0.15f),
+                modifier = Modifier.height(16.dp)
             )
 
             // Section items
@@ -216,6 +217,7 @@ private fun RimDrawerContent(
 
             HorizontalDivider(
                 color = rimColors.textSecondary.copy(alpha = 0.15f),
+                modifier = Modifier.height(16.dp)
             )
 
             // Logout
