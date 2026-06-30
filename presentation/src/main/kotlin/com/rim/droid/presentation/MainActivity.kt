@@ -2,6 +2,7 @@ package com.rim.droid.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import com.rim.droid.R
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.rim.droid.domain.repository.SessionRepository
@@ -17,6 +18,7 @@ class MainActivity : ComponentActivity() {
     lateinit var sessionRepository: SessionRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_RIM)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {

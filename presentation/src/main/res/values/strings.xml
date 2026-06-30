@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RIM</string>
+    <string name="app_name">RIM Droid</string>
 
     <!-- Drawer sections -->
     <string name="section_characters">Characters</string>
