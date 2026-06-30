@@ -32,10 +32,6 @@ proguard/
 # Android Studio
 /*/build/
 /*/production/
-*.iml
-*.ipr
-*.iws
-.idea/
 .navigation/
 captures/
 .externalNativeBuild/
@@ -54,10 +50,27 @@ captures/
 
 # IntelliJ
 *.iml
+*.ipr
+*.iws
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/gradle.xml
+.idea/assetWizardSettings.xml
+.idea/dictionaries
+.idea/libraries
+.idea/caches
+.idea/navEditor.xml
+.idea/caches/build_file_checksums.ser
+.idea/modules.xml
 .idea/
 
 # OS-specific
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 *.swp
 *~
@@ -71,24 +84,22 @@ kotlin-compiler-*
 # Detekt
 **/build/detekt/
 
-# OpenSpec archives
+# OpenSpec archives & local specifics
 /openspec/**/*.zip
 /openspec/**/*.tar
 /openspec/**/*.tar.gz
 /openspec/**/*.rar
-
-# OpenSpec (архивы изменений — хранятся отдельно)
 openspec/archive/
 
 # AI Agent Skills
 .skills/
 skills-lock.json
+.cline/
+.clinerules/
 
-# Reference materials (не в репозиторий)
+# Reference materials (not for VCS)
 design-refs/
-arch-refs
+arch-refs/
 
 # VSCode
 .vscode/
-# OpenSpec
-openspec/archive/

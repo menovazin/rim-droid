@@ -43,6 +43,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.rim.droid.presentation.theme.rimColors
 import com.rim.droid.presentation.ui.common.CharacterAvatarCircle
 import com.rim.droid.presentation.util.locationTypeIcon
 
@@ -90,7 +91,7 @@ fun LocationDetailScreen(
         ) {
             Surface(
                 modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.primaryContainer,
+                color = MaterialTheme.rimColors.surface,
             ) {
                 Column(modifier = Modifier.padding(24.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -98,13 +99,13 @@ fun LocationDetailScreen(
                             modifier = Modifier
                                 .size(56.dp)
                                 .clip(CircleShape)
-                                .background(MaterialTheme.colorScheme.primary),
+                                .background(MaterialTheme.rimColors.primary),
                             contentAlignment = Alignment.Center,
                         ) {
                             Icon(
                                 imageVector = loc.type.locationTypeIcon(),
                                 contentDescription = loc.type,
-                                tint = MaterialTheme.colorScheme.onPrimary,
+                                tint = MaterialTheme.rimColors.onPrimary,
                                 modifier = Modifier.size(32.dp),
                             )
                         }
@@ -113,7 +114,7 @@ fun LocationDetailScreen(
                             Text(text = loc.name, style = MaterialTheme.typography.headlineMedium)
                             Surface(
                                 shape = MaterialTheme.shapes.small,
-                                color = MaterialTheme.colorScheme.secondaryContainer,
+                                color = MaterialTheme.rimColors.surface,
                             ) {
                                 Text(
                                     text = loc.dimension,
@@ -127,7 +128,7 @@ fun LocationDetailScreen(
                     Text(
                         text = loc.type,
                         style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = MaterialTheme.rimColors.textSecondary,
                     )
                 }
             }

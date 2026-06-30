@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.rim.droid.domain.entity.Location
+import com.rim.droid.presentation.theme.rimColors
 import com.rim.droid.presentation.util.locationTypeIcon
 
 @Composable
@@ -111,13 +112,13 @@ private fun LocationCard(
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primaryContainer),
+                    .background(MaterialTheme.rimColors.surface),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     imageVector = location.type.locationTypeIcon(),
                     contentDescription = location.type,
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    tint = MaterialTheme.rimColors.onSurface,
                 )
             }
             Column(modifier = Modifier.padding(start = 12.dp)) {
@@ -125,7 +126,7 @@ private fun LocationCard(
                 Text(
                     text = "${location.type} • ${location.dimension}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.rimColors.textSecondary,
                 )
             }
         }

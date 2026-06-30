@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.rim.droid.presentation.theme.rimColors
 import com.rim.droid.presentation.ui.common.CharacterAvatarCircle
 import com.rim.droid.presentation.util.season
 import com.rim.droid.presentation.util.episodeNumber
@@ -88,27 +89,27 @@ fun EpisodeDetailScreen(
         ) {
             Surface(
                 modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.primaryContainer,
+                color = MaterialTheme.rimColors.surface,
             ) {
                 Column(modifier = Modifier.padding(24.dp)) {
                     Row {
                         Text(
                             text = "S%02d".format(ep.episodeCode.season),
                             style = MaterialTheme.typography.displaySmall.copy(fontSize = 48.sp),
-                            color = MaterialTheme.colorScheme.primary,
+                            color = MaterialTheme.rimColors.primary,
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = "E%02d".format(ep.episodeCode.episodeNumber),
                             style = MaterialTheme.typography.displaySmall.copy(fontSize = 48.sp),
-                            color = MaterialTheme.colorScheme.secondary,
+                            color = MaterialTheme.rimColors.secondary,
                         )
                     }
                     Text(text = ep.name, style = MaterialTheme.typography.headlineMedium)
                     Text(
                         text = ep.airDate,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = MaterialTheme.rimColors.textSecondary,
                     )
                 }
             }

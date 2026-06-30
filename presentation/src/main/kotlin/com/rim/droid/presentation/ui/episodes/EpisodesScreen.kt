@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.rim.droid.domain.entity.Episode
+import com.rim.droid.presentation.theme.rimColors
 import com.rim.droid.presentation.util.season
 import com.rim.droid.presentation.util.episodeNumber
 
@@ -106,7 +107,7 @@ private fun EpisodeCard(
         ) {
             Surface(
                 shape = MaterialTheme.shapes.small,
-                color = MaterialTheme.colorScheme.primaryContainer,
+                color = MaterialTheme.rimColors.surface,
             ) {
                 Text(
                     text = "S%02dE%02d".format(episode.episodeCode.season, episode.episodeCode.episodeNumber),
@@ -119,7 +120,7 @@ private fun EpisodeCard(
                 Text(
                     text = episode.airDate,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.rimColors.textSecondary,
                 )
             }
         }

@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
+import com.rim.droid.presentation.theme.rimColors
 import com.rim.droid.presentation.util.AvatarUrlUtils
 
 @Composable
@@ -36,7 +37,7 @@ fun CharacterAvatarCircle(
             modifier = Modifier
                 .size(48.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.surfaceVariant),
+                .background(MaterialTheme.rimColors.surface),
             contentAlignment = Alignment.Center,
         ) {
             SubcomposeAsyncImage(
@@ -48,7 +49,7 @@ fun CharacterAvatarCircle(
                     Icon(
                         imageVector = Icons.Default.Person,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = MaterialTheme.rimColors.textSecondary,
                     )
                 },
             )

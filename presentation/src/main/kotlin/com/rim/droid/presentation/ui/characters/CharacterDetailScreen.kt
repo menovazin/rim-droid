@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.rim.droid.presentation.theme.rimColors
 import com.rim.droid.presentation.util.AvatarUrlUtils
 import com.rim.droid.presentation.util.genderIcon
 import com.rim.droid.presentation.util.genderSymbol
@@ -129,7 +130,7 @@ fun CharacterDetailScreen(
 @Composable
 private fun DetailRow(label: String, value: String) {
     Row(modifier = Modifier.padding(vertical = 4.dp)) {
-        Text("$label: ", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text("$label: ", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.rimColors.textSecondary)
         Text(value, style = MaterialTheme.typography.bodyMedium)
     }
 }
