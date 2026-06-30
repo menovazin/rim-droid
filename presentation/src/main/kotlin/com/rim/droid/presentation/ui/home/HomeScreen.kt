@@ -2,7 +2,6 @@ package com.rim.droid.presentation.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +19,7 @@ import androidx.compose.material.icons.outlined.Movie
 import androidx.compose.material.icons.outlined.PeopleAlt
 import androidx.compose.material.icons.outlined.Public
 import androidx.compose.material.icons.outlined.Science
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -30,7 +30,6 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -45,6 +44,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -97,11 +97,12 @@ fun HomeScreen(
     ) {
         Scaffold(
             topBar = {
-                TopAppBar(
+                CenterAlignedTopAppBar(
                     title = {
                         Text(
                             text = currentSection.title,
                             color = rimColors.textPrimary,
+                            textAlign = TextAlign.Center,
                         )
                     },
                     navigationIcon = {
@@ -112,10 +113,22 @@ fun HomeScreen(
                             )
                         }
                     },
-                    colors = TopAppBarDefaults.topAppBarColors(
+                    actions = {
+                        // Пустая иконка-заглушка для симметрии с navigationIcon,
+                        // чтобы заголовок визуально центрировался.
+                        IconButton(onClick = {}) {
+                            Icon(
+                                imageVector = Icons.Default.Menu,
+                                contentDescription = null,
+                                tint = Color.Transparent,
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                         containerColor = rimColors.background,
                         titleContentColor = rimColors.textPrimary,
                         navigationIconContentColor = rimColors.textPrimary,
+                        actionIconContentColor = rimColors.textPrimary,
                     ),
                 )
             },
@@ -262,6 +275,7 @@ private fun RimDrawerItem(
     }
 }
 
+@Suppress("UnusedPrivateMember")
 @Preview(name = "Drawer Content", showBackground = true)
 @Composable
 private fun RimDrawerContentPreview() {
@@ -271,62 +285,5 @@ private fun RimDrawerContentPreview() {
             onSectionClick = {},
             onLogout = {},
         )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun HomeScreenSkeleton(currentSection: Section) {
-    val rimColors = MaterialTheme.rimColors
-
-    ModalNavigationDrawer(
-        drawerState = rememberDrawerState(DrawerValue.Closed),
-        scrimColor = Color.Black.copy(alpha = 0.4f),
-        drawerContent = {
-            RimDrawerContent(
-                currentSection = currentSection,
-                onSectionClick = {},
-                onLogout = {},
-            )
-        },
-    ) {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = currentSection.title,
-                            color = rimColors.textPrimary,
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = {}) {
-                            Icon(
-                                imageVector = Icons.Default.Menu,
-                                contentDescription = "Меню",
-                            )
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = rimColors.background,
-                        titleContentColor = rimColors.textPrimary,
-                        navigationIconContentColor = rimColors.textPrimary,
-                    ),
-                )
-            },
-        ) { paddingValues ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = currentSection.title,
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = rimColors.textSecondary,
-                )
-            }
-        }
     }
 }
