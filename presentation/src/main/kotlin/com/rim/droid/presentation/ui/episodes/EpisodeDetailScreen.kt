@@ -1,7 +1,10 @@
 package com.rim.droid.presentation.ui.episodes
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -10,10 +13,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -23,7 +26,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -32,13 +34,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.rim.droid.domain.entity.Episode
 import com.rim.droid.presentation.theme.rimColors
 import com.rim.droid.presentation.ui.common.CharacterAvatarCircle
@@ -51,9 +56,11 @@ fun EpisodeDetailScreen(
     episode: Episode,
     onBack: () -> Unit,
 ) {
+    val rimColors = MaterialTheme.rimColors
     var scale by remember { mutableFloatStateOf(1f) }
 
     Scaffold(
+        containerColor = rimColors.background,
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
@@ -68,8 +75,6 @@ fun EpisodeDetailScreen(
                     }
                 },
                 actions = {
-                    // Пустая иконка-заглушка для симметрии с navigationIcon,
-                    // чтобы заголовок визуально центрировался.
                     IconButton(onClick = {}) {
                         Icon(
                             imageVector = Icons.Default.Menu,
@@ -79,10 +84,10 @@ fun EpisodeDetailScreen(
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.rimColors.background,
-                    titleContentColor = MaterialTheme.rimColors.textPrimary,
-                    navigationIconContentColor = MaterialTheme.rimColors.textPrimary,
-                    actionIconContentColor = MaterialTheme.rimColors.textPrimary,
+                    containerColor = rimColors.background,
+                    titleContentColor = rimColors.textPrimary,
+                    navigationIconContentColor = rimColors.textPrimary,
+                    actionIconContentColor = rimColors.textPrimary,
                 ),
             )
         },
@@ -99,37 +104,94 @@ fun EpisodeDetailScreen(
                 }
                 .graphicsLayer(scaleX = scale, scaleY = scale),
         ) {
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.rimColors.surface,
+            val s = episode.episodeCode.season
+            val e = episode.episodeCode.episodeNumber
+
+            // Gradient card with badges
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(
+                        Brush.linearGradient(
+                            colors = listOf(
+                                rimColors.primary.copy(alpha = 0.15f),
+                                rimColors.surface,
+                            ),
+                        ),
+                    )
+                    .padding(20.dp),
             ) {
-                Column(modifier = Modifier.padding(24.dp)) {
+                Column {
                     Row {
-                        Text(
-                            text = "S%02d".format(episode.episodeCode.season),
-                            style = MaterialTheme.typography.displaySmall.copy(fontSize = 48.sp),
-                            color = MaterialTheme.rimColors.primary,
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "E%02d".format(episode.episodeCode.episodeNumber),
-                            style = MaterialTheme.typography.displaySmall.copy(fontSize = 48.sp),
-                            color = MaterialTheme.rimColors.secondary,
-                        )
+                        // S01 badge (filled)
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(rimColors.primary)
+                                .padding(horizontal = 10.dp, vertical = 4.dp),
+                        ) {
+                            Text(
+                                text = "S%02d".format(s),
+                                style = MaterialTheme.typography.labelLarge,
+                                color = rimColors.onPrimary,
+                                fontWeight = FontWeight.W700,
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        // E01 badge (outlined)
+                        Box(
+                            modifier = Modifier
+                                .padding(start = 8.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .border(
+                                    width = 1.dp,
+                                    color = rimColors.primary.copy(alpha = 0.4f),
+                                    shape = RoundedCornerShape(8.dp),
+                                )
+                                .padding(horizontal = 10.dp, vertical = 4.dp),
+                        ) {
+                            Text(
+                                text = "E%02d".format(e),
+                                style = MaterialTheme.typography.labelLarge,
+                                color = rimColors.primary,
+                                fontWeight = FontWeight.W700,
+                            )
+                        }
                     }
-                    Text(text = episode.name, style = MaterialTheme.typography.headlineMedium)
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = episode.name,
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = rimColors.textPrimary,
+                        fontWeight = FontWeight.W700,
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = episode.airDate,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.rimColors.textSecondary,
+                        color = rimColors.textSecondary,
                     )
                 }
             }
 
-            if (episode.characterIds.isNotEmpty()) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Персонажи", style = MaterialTheme.typography.titleMedium)
-                    Spacer(modifier = Modifier.height(8.dp))
+            // Characters section
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = "Персонажи (${episode.characterIds.size})",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = rimColors.primary,
+                    fontWeight = FontWeight.W700,
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                if (episode.characterIds.isEmpty()) {
+                    Text(
+                        text = "Нет персонажей",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = rimColors.textSecondary,
+                    )
+                } else {
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         contentPadding = PaddingValues(vertical = 4.dp),

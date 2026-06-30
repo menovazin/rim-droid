@@ -13,8 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -23,6 +26,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -37,11 +42,15 @@ fun LocationsScreen(
     modifier: Modifier = Modifier,
 ) {
     val locations = viewModel.locations.collectAsLazyPagingItems()
+    val rimColors = MaterialTheme.rimColors
 
     Box(modifier = modifier.fillMaxSize()) {
         when {
             locations.loadState.refresh is LoadState.Loading -> {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center),
+                    color = rimColors.primary,
+                )
             }
             locations.loadState.refresh is LoadState.Error -> {
                 val error = (locations.loadState.refresh as LoadState.Error).error
@@ -49,16 +58,25 @@ fun LocationsScreen(
                     modifier = Modifier.align(Alignment.Center),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Text(text = "Ошибка: ${error.localizedMessage}")
-                    Button(onClick = { locations.retry() }) {
+                    Text(
+                        text = "Ошибка: ${error.localizedMessage}",
+                        color = rimColors.textSecondary,
+                    )
+                    Button(
+                        onClick = { locations.retry() },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = rimColors.primary,
+                            contentColor = rimColors.onPrimary,
+                        ),
+                    ) {
                         Text("Повторить")
                     }
                 }
             }
             else -> {
                 LazyColumn(
-                    contentPadding = PaddingValues(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
                     items(locations.itemCount) { index ->
                         locations[index]?.let { location ->
@@ -74,7 +92,7 @@ fun LocationsScreen(
                                 modifier = Modifier.fillMaxWidth().padding(16.dp),
                                 contentAlignment = Alignment.Center,
                             ) {
-                                CircularProgressIndicator()
+                                CircularProgressIndicator(color = rimColors.primary)
                             }
                         }
                     }
@@ -83,6 +101,10 @@ fun LocationsScreen(
                             Button(
                                 onClick = { locations.retry() },
                                 modifier = Modifier.fillMaxWidth().padding(16.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = rimColors.primary,
+                                    contentColor = rimColors.onPrimary,
+                                ),
                             ) {
                                 Text("Повторить загрузку")
                             }
@@ -99,34 +121,54 @@ private fun LocationCard(
     location: Location,
     onClick: () -> Unit,
 ) {
-    Card(
+    val rimColors = MaterialTheme.rimColors
+
+    Box(
         modifier = Modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(rimColors.surface)
             .clickable(onClick = onClick),
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.rimColors.surface),
+                    .background(rimColors.secondary.copy(alpha = 0.18f)),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     imageVector = location.type.locationTypeIcon(),
                     contentDescription = location.type,
-                    tint = MaterialTheme.rimColors.onSurface,
+                    tint = rimColors.secondary,
                 )
             }
-            Column(modifier = Modifier.padding(start = 12.dp)) {
-                Text(text = location.name, style = MaterialTheme.typography.titleMedium)
+            Column(modifier = Modifier.padding(start = 12.dp).weight(1f)) {
                 Text(
-                    text = "${location.type} • ${location.dimension}",
+                    text = location.name,
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.W700,
+                    color = rimColors.textPrimary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Text(
+                    text = "${location.type.ifEmpty { "Unknown" }} • ${location.dimension.ifEmpty { "Unknown" }}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.rimColors.textSecondary,
+                    color = rimColors.textSecondary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+            Box(modifier = Modifier.padding(start = 8.dp)) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = null,
+                    tint = rimColors.textSecondary,
                 )
             }
         }
