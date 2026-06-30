@@ -33,7 +33,7 @@ import com.rim.droid.presentation.util.locationTypeIcon
 @Composable
 fun LocationsScreen(
     viewModel: LocationsViewModel,
-    onLocationClick: (Int) -> Unit,
+    onLocationClick: (Location) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val locations = viewModel.locations.collectAsLazyPagingItems()
@@ -64,7 +64,7 @@ fun LocationsScreen(
                         locations[index]?.let { location ->
                             LocationCard(
                                 location = location,
-                                onClick = { onLocationClick(location.id) },
+                                onClick = { onLocationClick(location) },
                             )
                         }
                     }

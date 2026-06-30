@@ -45,7 +45,7 @@ import com.rim.droid.presentation.util.statusColor
 @Composable
 fun CharactersScreen(
     viewModel: CharactersViewModel,
-    onCharacterClick: (Int) -> Unit,
+    onCharacterClick: (Character) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val characters = viewModel.characters.collectAsLazyPagingItems()
@@ -91,7 +91,7 @@ fun CharactersScreen(
                         characters[index]?.let { character ->
                             CharacterCard(
                                 character = character,
-                                onClick = { onCharacterClick(character.id) },
+                                onClick = { onCharacterClick(character) },
                             )
                         }
                     }

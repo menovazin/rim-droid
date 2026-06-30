@@ -32,7 +32,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,9 +39,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.SubcomposeAsyncImage
+import com.rim.droid.domain.entity.Character
 import com.rim.droid.presentation.theme.rimColors
 import com.rim.droid.presentation.ui.common.DetailChip
 import com.rim.droid.presentation.ui.common.DetailInfoRow
@@ -54,11 +52,9 @@ import com.rim.droid.presentation.util.statusColor
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun CharacterDetailScreen(
-    characterId: Int,
+    character: Character,
     onBack: () -> Unit,
-    viewModel: CharacterDetailViewModel = hiltViewModel(),
 ) {
-    val character by viewModel.character.collectAsStateWithLifecycle()
     val rimColors = MaterialTheme.rimColors
 
     Scaffold(
@@ -67,7 +63,7 @@ fun CharacterDetailScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = character?.name ?: "Загрузка...",
+                        text = character.name,
                         textAlign = TextAlign.Center,
                     )
                 },
@@ -96,21 +92,13 @@ fun CharacterDetailScreen(
             )
         },
     ) { paddingValues ->
-        val ch = character
-        if (ch == null) {
-            Box(Modifier.fillMaxSize().padding(paddingValues), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = rimColors.primary)
-            }
-            return@Scaffold
-        }
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState()),
         ) {
-            CharacterImage(characterId = ch.id, characterName = ch.name)
+            CharacterImage(characterId = character.id, characterName = character.name)
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -119,11 +107,11 @@ fun CharacterDetailScreen(
                     modifier = Modifier
                         .size(12.dp)
                         .clip(CircleShape)
-                        .background(ch.statusColor()),
+                        .background(character.statusColor()),
                 )
                 Spacer(modifier = Modifier.size(8.dp))
                 Text(
-                    text = "${ch.status} • ${ch.species}",
+                    text = "${character.status} • ${character.species}",
                     style = MaterialTheme.typography.titleMedium,
                     color = rimColors.textPrimary,
                 )
@@ -132,26 +120,26 @@ fun CharacterDetailScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                DetailInfoRow(label = "Вид", value = ch.species)
-                if (ch.type.isNotBlank()) {
-                    DetailInfoRow(label = "Тип", value = ch.type)
+                DetailInfoRow(label = "Вид", value = character.species)
+                if (character.type.isNotBlank()) {
+                    DetailInfoRow(label = "Тип", value = character.type)
                 }
                 DetailInfoRow(
                     label = "Пол",
-                    value = "${ch.gender.genderSymbol()}  ${ch.gender}",
+                    value = "${character.gender.genderSymbol()}  ${character.gender}",
                 )
-                DetailInfoRow(label = "Происхождение", value = ch.origin)
-                DetailInfoRow(label = "Локация", value = ch.location)
+                DetailInfoRow(label = "Происхождение", value = character.origin)
+                DetailInfoRow(label = "Локация", value = character.location)
 
-                if (ch.episodeIds.isNotEmpty()) {
+                if (character.episodeIds.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
-                    DetailSectionTitle(title = "Эпизоды (${ch.episodeIds.size})")
+                    DetailSectionTitle(title = "Эпизоды (${character.episodeIds.size})")
                     Spacer(modifier = Modifier.height(8.dp))
                     FlowRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        ch.episodeIds.forEach { id ->
+                        character.episodeIds.forEach { id ->
                             DetailChip(label = "E${id.toString().padStart(2, '0')}")
                         }
                     }

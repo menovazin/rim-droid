@@ -30,7 +30,7 @@ import com.rim.droid.presentation.util.episodeNumber
 @Composable
 fun EpisodesScreen(
     viewModel: EpisodesViewModel,
-    onEpisodeClick: (Int) -> Unit,
+    onEpisodeClick: (Episode) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val episodes = viewModel.episodes.collectAsLazyPagingItems()
@@ -61,7 +61,7 @@ fun EpisodesScreen(
                         episodes[index]?.let { episode ->
                             EpisodeCard(
                                 episode = episode,
-                                onClick = { onEpisodeClick(episode.id) },
+                                onClick = { onEpisodeClick(episode) },
                             )
                         }
                     }

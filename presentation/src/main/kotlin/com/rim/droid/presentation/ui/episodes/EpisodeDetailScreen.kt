@@ -2,7 +2,6 @@ package com.rim.droid.presentation.ui.episodes
 
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -19,7 +18,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,7 +32,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
@@ -42,8 +39,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.rim.droid.domain.entity.Episode
 import com.rim.droid.presentation.theme.rimColors
 import com.rim.droid.presentation.ui.common.CharacterAvatarCircle
 import com.rim.droid.presentation.util.season
@@ -52,11 +48,9 @@ import com.rim.droid.presentation.util.episodeNumber
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EpisodeDetailScreen(
-    episodeId: Int,
+    episode: Episode,
     onBack: () -> Unit,
-    viewModel: EpisodeDetailViewModel = hiltViewModel(),
 ) {
-    val episode by viewModel.episode.collectAsStateWithLifecycle()
     var scale by remember { mutableFloatStateOf(1f) }
 
     Scaffold(
@@ -64,7 +58,7 @@ fun EpisodeDetailScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = episode?.name ?: "Загрузка...",
+                        text = episode.name,
                         textAlign = TextAlign.Center,
                     )
                 },
@@ -93,14 +87,6 @@ fun EpisodeDetailScreen(
             )
         },
     ) { paddingValues ->
-        val ep = episode
-        if (ep == null) {
-            Box(Modifier.fillMaxSize().padding(paddingValues), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-            return@Scaffold
-        }
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -120,27 +106,27 @@ fun EpisodeDetailScreen(
                 Column(modifier = Modifier.padding(24.dp)) {
                     Row {
                         Text(
-                            text = "S%02d".format(ep.episodeCode.season),
+                            text = "S%02d".format(episode.episodeCode.season),
                             style = MaterialTheme.typography.displaySmall.copy(fontSize = 48.sp),
                             color = MaterialTheme.rimColors.primary,
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "E%02d".format(ep.episodeCode.episodeNumber),
+                            text = "E%02d".format(episode.episodeCode.episodeNumber),
                             style = MaterialTheme.typography.displaySmall.copy(fontSize = 48.sp),
                             color = MaterialTheme.rimColors.secondary,
                         )
                     }
-                    Text(text = ep.name, style = MaterialTheme.typography.headlineMedium)
+                    Text(text = episode.name, style = MaterialTheme.typography.headlineMedium)
                     Text(
-                        text = ep.airDate,
+                        text = episode.airDate,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.rimColors.textSecondary,
                     )
                 }
             }
 
-            if (ep.characterIds.isNotEmpty()) {
+            if (episode.characterIds.isNotEmpty()) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text("Персонажи", style = MaterialTheme.typography.titleMedium)
                     Spacer(modifier = Modifier.height(8.dp))
@@ -148,7 +134,7 @@ fun EpisodeDetailScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         contentPadding = PaddingValues(vertical = 4.dp),
                     ) {
-                        items(ep.characterIds) { characterId ->
+                        items(episode.characterIds) { characterId ->
                             CharacterAvatarCircle(characterId = characterId, name = "#$characterId")
                         }
                     }

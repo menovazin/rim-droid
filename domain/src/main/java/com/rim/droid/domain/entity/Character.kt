@@ -1,8 +1,11 @@
 package com.rim.droid.domain.entity
 
+import kotlinx.serialization.Serializable
+
 /**
  * Domain model for a Rick and Morty character, isolated from the REST schema.
  */
+@Serializable
 data class Character(
     val id: Int,
     val name: String,

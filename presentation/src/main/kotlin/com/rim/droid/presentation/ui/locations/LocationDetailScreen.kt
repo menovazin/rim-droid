@@ -22,7 +22,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,8 +44,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.rim.droid.domain.entity.Location
 import com.rim.droid.presentation.theme.rimColors
 import com.rim.droid.presentation.ui.common.CharacterAvatarCircle
 import com.rim.droid.presentation.util.locationTypeIcon
@@ -54,11 +52,9 @@ import com.rim.droid.presentation.util.locationTypeIcon
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocationDetailScreen(
-    locationId: Int,
+    location: Location,
     onBack: () -> Unit,
-    viewModel: LocationDetailViewModel = hiltViewModel(),
 ) {
-    val location by viewModel.location.collectAsStateWithLifecycle()
     var scale by remember { mutableFloatStateOf(1f) }
 
     Scaffold(
@@ -66,7 +62,7 @@ fun LocationDetailScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = location?.name ?: "Загрузка...",
+                        text = location.name,
                         textAlign = TextAlign.Center,
                     )
                 },
@@ -95,14 +91,6 @@ fun LocationDetailScreen(
             )
         },
     ) { paddingValues ->
-        val loc = location
-        if (loc == null) {
-            Box(Modifier.fillMaxSize().padding(paddingValues), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-            return@Scaffold
-        }
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -129,21 +117,21 @@ fun LocationDetailScreen(
                             contentAlignment = Alignment.Center,
                         ) {
                             Icon(
-                                imageVector = loc.type.locationTypeIcon(),
-                                contentDescription = loc.type,
+                                imageVector = location.type.locationTypeIcon(),
+                                contentDescription = location.type,
                                 tint = MaterialTheme.rimColors.onPrimary,
                                 modifier = Modifier.size(32.dp),
                             )
                         }
                         Spacer(modifier = Modifier.width(16.dp))
                         Column {
-                            Text(text = loc.name, style = MaterialTheme.typography.headlineMedium)
+                            Text(text = location.name, style = MaterialTheme.typography.headlineMedium)
                             Surface(
                                 shape = MaterialTheme.shapes.small,
                                 color = MaterialTheme.rimColors.surface,
                             ) {
                                 Text(
-                                    text = loc.dimension,
+                                    text = location.dimension,
                                     style = MaterialTheme.typography.labelMedium,
                                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                                 )
@@ -152,14 +140,14 @@ fun LocationDetailScreen(
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = loc.type,
+                        text = location.type,
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.rimColors.textSecondary,
                     )
                 }
             }
 
-            if (loc.residentIds.isNotEmpty()) {
+            if (location.residentIds.isNotEmpty()) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text("Резиденты", style = MaterialTheme.typography.titleMedium)
                     Spacer(modifier = Modifier.height(8.dp))
@@ -167,7 +155,7 @@ fun LocationDetailScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         contentPadding = PaddingValues(vertical = 4.dp),
                     ) {
-                        items(loc.residentIds) { residentId ->
+                        items(location.residentIds) { residentId ->
                             CharacterAvatarCircle(characterId = residentId, name = "#$residentId")
                         }
                     }

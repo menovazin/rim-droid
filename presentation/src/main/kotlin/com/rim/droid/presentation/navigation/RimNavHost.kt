@@ -8,12 +8,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.rim.droid.domain.entity.Character
+import com.rim.droid.domain.entity.Episode
+import com.rim.droid.domain.entity.Location
 import com.rim.droid.presentation.ui.characters.CharacterDetailScreen
 import com.rim.droid.presentation.ui.episodes.EpisodeDetailScreen
 import com.rim.droid.presentation.ui.home.HomeScreen
 import com.rim.droid.presentation.ui.locations.LocationDetailScreen
 import com.rim.droid.presentation.ui.login.LoginScreen
 import com.rim.droid.presentation.ui.login.LoginViewModel
+import kotlin.reflect.typeOf
 
 @Composable
 fun RimNavHost(
@@ -45,9 +49,9 @@ fun RimNavHost(
 
         composable<HomeRoute> {
             HomeScreen(
-                onCharacterClick = { id -> navController.navigate(CharacterDetailRoute(id)) },
-                onEpisodeClick = { id -> navController.navigate(EpisodeDetailRoute(id)) },
-                onLocationClick = { id -> navController.navigate(LocationDetailRoute(id)) },
+                onCharacterClick = { character -> navController.navigate(CharacterDetailRoute(character)) },
+                onEpisodeClick = { episode -> navController.navigate(EpisodeDetailRoute(episode)) },
+                onLocationClick = { location -> navController.navigate(LocationDetailRoute(location)) },
                 onLogout = {
                     onLogout()
                     navController.navigate(LoginRoute) {
@@ -57,19 +61,25 @@ fun RimNavHost(
             )
         }
 
-        composable<CharacterDetailRoute> { backStackEntry ->
+        composable<CharacterDetailRoute>(
+            typeMap = mapOf(typeOf<Character>() to CharacterNavType),
+        ) { backStackEntry ->
             val route = backStackEntry.toRoute<CharacterDetailRoute>()
-            CharacterDetailScreen(characterId = route.characterId, onBack = { navController.popBackStack() })
+            CharacterDetailScreen(character = route.character, onBack = { navController.popBackStack() })
         }
 
-        composable<EpisodeDetailRoute> { backStackEntry ->
+        composable<EpisodeDetailRoute>(
+            typeMap = mapOf(typeOf<Episode>() to EpisodeNavType),
+        ) { backStackEntry ->
             val route = backStackEntry.toRoute<EpisodeDetailRoute>()
-            EpisodeDetailScreen(episodeId = route.episodeId, onBack = { navController.popBackStack() })
+            EpisodeDetailScreen(episode = route.episode, onBack = { navController.popBackStack() })
         }
 
-        composable<LocationDetailRoute> { backStackEntry ->
+        composable<LocationDetailRoute>(
+            typeMap = mapOf(typeOf<Location>() to LocationNavType),
+        ) { backStackEntry ->
             val route = backStackEntry.toRoute<LocationDetailRoute>()
-            LocationDetailScreen(locationId = route.locationId, onBack = { navController.popBackStack() })
+            LocationDetailScreen(location = route.location, onBack = { navController.popBackStack() })
         }
     }
 }

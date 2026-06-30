@@ -57,6 +57,9 @@ import com.rim.droid.presentation.ui.episodes.EpisodesScreen
 import com.rim.droid.presentation.ui.episodes.EpisodesViewModel
 import com.rim.droid.presentation.ui.locations.LocationsScreen
 import com.rim.droid.presentation.ui.locations.LocationsViewModel
+import com.rim.droid.domain.entity.Character
+import com.rim.droid.domain.entity.Episode
+import com.rim.droid.domain.entity.Location
 import kotlinx.coroutines.launch
 
 enum class Section(val title: String, val icon: ImageVector) {
@@ -68,9 +71,9 @@ enum class Section(val title: String, val icon: ImageVector) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    onCharacterClick: (Int) -> Unit,
-    onEpisodeClick: (Int) -> Unit,
-    onLocationClick: (Int) -> Unit,
+    onCharacterClick: (Character) -> Unit,
+    onEpisodeClick: (Episode) -> Unit,
+    onLocationClick: (Location) -> Unit,
     onLogout: () -> Unit,
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
