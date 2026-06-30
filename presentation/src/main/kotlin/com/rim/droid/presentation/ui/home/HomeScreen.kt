@@ -35,8 +35,9 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -78,8 +79,9 @@ fun HomeScreen(
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    var currentSection by remember { mutableStateOf(Section.CHARACTERS) }
+    var currentSection by rememberSaveable { mutableStateOf(Section.CHARACTERS) }
     val rimColors = MaterialTheme.rimColors
+    val saveableStateHolder = rememberSaveableStateHolder()
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -136,30 +138,32 @@ fun HomeScreen(
                 )
             },
         ) { paddingValues ->
-            when (currentSection) {
-                Section.CHARACTERS -> {
-                    val viewModel = hiltViewModel<CharactersViewModel>()
-                    CharactersScreen(
-                        viewModel = viewModel,
-                        onCharacterClick = onCharacterClick,
-                        modifier = Modifier.padding(paddingValues),
-                    )
-                }
-                Section.EPISODES -> {
-                    val viewModel = hiltViewModel<EpisodesViewModel>()
-                    EpisodesScreen(
-                        viewModel = viewModel,
-                        onEpisodeClick = onEpisodeClick,
-                        modifier = Modifier.padding(paddingValues),
-                    )
-                }
-                Section.LOCATIONS -> {
-                    val viewModel = hiltViewModel<LocationsViewModel>()
-                    LocationsScreen(
-                        viewModel = viewModel,
-                        onLocationClick = onLocationClick,
-                        modifier = Modifier.padding(paddingValues),
-                    )
+            saveableStateHolder.SaveableStateProvider(key = currentSection.name) {
+                when (currentSection) {
+                    Section.CHARACTERS -> {
+                        val viewModel = hiltViewModel<CharactersViewModel>()
+                        CharactersScreen(
+                            viewModel = viewModel,
+                            onCharacterClick = onCharacterClick,
+                            modifier = Modifier.padding(paddingValues),
+                        )
+                    }
+                    Section.EPISODES -> {
+                        val viewModel = hiltViewModel<EpisodesViewModel>()
+                        EpisodesScreen(
+                            viewModel = viewModel,
+                            onEpisodeClick = onEpisodeClick,
+                            modifier = Modifier.padding(paddingValues),
+                        )
+                    }
+                    Section.LOCATIONS -> {
+                        val viewModel = hiltViewModel<LocationsViewModel>()
+                        LocationsScreen(
+                            viewModel = viewModel,
+                            onLocationClick = onLocationClick,
+                            modifier = Modifier.padding(paddingValues),
+                        )
+                    }
                 }
             }
         }
