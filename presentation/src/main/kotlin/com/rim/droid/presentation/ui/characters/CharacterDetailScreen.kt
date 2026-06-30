@@ -1,6 +1,6 @@
 package com.rim.droid.presentation.ui.characters
 
-import androidx.compose.foundation.gestures.detectTransformGestures
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,17 +8,19 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.AssistChip
+import androidx.compose.material.icons.outlined.BrokenImage
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -27,24 +29,24 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.rim.droid.presentation.theme.rimColors
+import com.rim.droid.presentation.ui.common.DetailChip
+import com.rim.droid.presentation.ui.common.DetailInfoRow
+import com.rim.droid.presentation.ui.common.DetailSectionTitle
 import com.rim.droid.presentation.util.AvatarUrlUtils
-import com.rim.droid.presentation.util.genderIcon
 import com.rim.droid.presentation.util.genderSymbol
+import com.rim.droid.presentation.util.statusColor
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -54,9 +56,10 @@ fun CharacterDetailScreen(
     viewModel: CharacterDetailViewModel = hiltViewModel(),
 ) {
     val character by viewModel.character.collectAsStateWithLifecycle()
-    var scale by remember { mutableFloatStateOf(1f) }
+    val rimColors = MaterialTheme.rimColors
 
     Scaffold(
+        containerColor = rimColors.background,
         topBar = {
             TopAppBar(
                 title = { Text(character?.name ?: "Загрузка...") },
@@ -65,13 +68,18 @@ fun CharacterDetailScreen(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
                     }
                 },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = rimColors.background,
+                    titleContentColor = rimColors.textPrimary,
+                    navigationIconContentColor = rimColors.textPrimary,
+                ),
             )
         },
     ) { paddingValues ->
         val ch = character
         if (ch == null) {
             Box(Modifier.fillMaxSize().padding(paddingValues), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(color = rimColors.primary)
             }
             return@Scaffold
         }
@@ -80,45 +88,51 @@ fun CharacterDetailScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .verticalScroll(rememberScrollState())
-                .pointerInput(Unit) {
-                    detectTransformGestures { _, _, zoom, _ ->
-                        scale = (scale * zoom).coerceIn(0.5f, 3f)
-                    }
-                }
-                .graphicsLayer(scaleX = scale, scaleY = scale),
+                .verticalScroll(rememberScrollState()),
         ) {
-            AsyncImage(
-                model = AvatarUrlUtils.avatarUrlFromId(ch.id),
-                contentDescription = ch.name,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxWidth().height(300.dp),
-            )
+            CharacterImage(characterId = ch.id, characterName = ch.name)
 
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(text = ch.name, style = MaterialTheme.typography.headlineMedium)
-                Spacer(modifier = Modifier.height(8.dp))
-                Row {
-                    Icon(imageVector = ch.gender.genderIcon(), contentDescription = null, modifier = Modifier.size(20.dp))
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = "${ch.gender} ${ch.gender.genderSymbol()}", style = MaterialTheme.typography.bodyLarge)
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .size(12.dp)
+                        .clip(CircleShape)
+                        .background(ch.statusColor()),
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                Text(
+                    text = "${ch.status} • ${ch.species}",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = rimColors.textPrimary,
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                DetailInfoRow(label = "Вид", value = ch.species)
+                if (ch.type.isNotBlank()) {
+                    DetailInfoRow(label = "Тип", value = ch.type)
                 }
-                DetailRow("Статус", ch.status)
-                DetailRow("Вид", ch.species)
-                if (ch.type.isNotBlank()) DetailRow("Тип", ch.type)
-                DetailRow("Происхождение", ch.origin)
-                DetailRow("Локация", ch.location)
+                DetailInfoRow(
+                    label = "Пол",
+                    value = "${ch.gender.genderSymbol()}  ${ch.gender}",
+                )
+                DetailInfoRow(label = "Происхождение", value = ch.origin)
+                DetailInfoRow(label = "Локация", value = ch.location)
 
                 if (ch.episodeIds.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text("Эпизоды", style = MaterialTheme.typography.titleMedium)
+                    DetailSectionTitle(title = "Эпизоды (${ch.episodeIds.size})")
                     Spacer(modifier = Modifier.height(8.dp))
                     FlowRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         ch.episodeIds.forEach { id ->
-                            AssistChip(onClick = {}, label = { Text("S%02dE%02d".format(((id - 1) / 11) + 1, ((id - 1) % 11) + 1)) })
+                            DetailChip(label = "E${id.toString().padStart(2, '0')}")
                         }
                     }
                 }
@@ -128,9 +142,39 @@ fun CharacterDetailScreen(
 }
 
 @Composable
-private fun DetailRow(label: String, value: String) {
-    Row(modifier = Modifier.padding(vertical = 4.dp)) {
-        Text("$label: ", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.rimColors.textSecondary)
-        Text(value, style = MaterialTheme.typography.bodyMedium)
+private fun CharacterImage(characterId: Int, characterName: String) {
+    val rimColors = MaterialTheme.rimColors
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(16.dp))
+            .aspectRatio(1f)
+            .fillMaxWidth(),
+    ) {
+        SubcomposeAsyncImage(
+            model = AvatarUrlUtils.avatarUrlFromId(characterId),
+            contentDescription = characterName,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize(),
+            loading = {
+                Box(
+                    modifier = Modifier.fillMaxSize().background(rimColors.surface),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator(color = rimColors.primary)
+                }
+            },
+            error = {
+                Box(
+                    modifier = Modifier.fillMaxSize().background(rimColors.surface),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.BrokenImage,
+                        contentDescription = null,
+                        tint = rimColors.textSecondary,
+                    )
+                }
+            },
+        )
     }
 }
