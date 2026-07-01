@@ -31,12 +31,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.SubcomposeAsyncImage
+import com.rim.droid.R
 import com.rim.droid.domain.entity.Character
 import com.rim.droid.presentation.theme.rimColors
 import com.rim.droid.presentation.util.AvatarUrlUtils
@@ -66,7 +68,7 @@ fun CharactersScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
-                        text = "Ошибка: ${error.localizedMessage}",
+                        text = stringResource(R.string.state_error_message, error.localizedMessage ?: ""),
                         color = rimColors.textSecondary,
                     )
                     Button(
@@ -76,7 +78,7 @@ fun CharactersScreen(
                             contentColor = rimColors.onPrimary,
                         ),
                     ) {
-                        Text("Повторить")
+                        Text(stringResource(R.string.action_retry))
                     }
                 }
             }
@@ -115,7 +117,7 @@ fun CharactersScreen(
                                     contentColor = rimColors.onPrimary,
                                 ),
                             ) {
-                                Text("Повторить загрузку")
+                                Text(stringResource(R.string.action_retry_loading))
                             }
                         }
                     }

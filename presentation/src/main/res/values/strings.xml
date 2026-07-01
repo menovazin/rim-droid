@@ -8,13 +8,28 @@
     <string name="action_logout">Logout</string>
 
     <!-- Login -->
-    <string name="login_title">Sign in</string>
+    <string name="login_subtitle">Sign in to open the portal</string>
     <string name="login_hint_name">Name</string>
     <string name="login_button">Sign in</string>
 
+    <!-- Detail labels -->
+    <string name="detail_species">Species</string>
+    <string name="detail_type">Type</string>
+    <string name="detail_gender">Gender</string>
+    <string name="detail_origin">Origin</string>
+    <string name="detail_location">Location</string>
+
+    <!-- Section counts -->
+    <string name="section_episodes_count">Episodes (%1$d)</string>
+    <string name="section_residents_count">Residents (%1$d)</string>
+    <string name="section_characters_count">Characters (%1$d)</string>
+    <string name="no_characters">No characters</string>
+    <string name="no_residents">No residents</string>
+
     <!-- Common -->
-    <string name="state_loading">Loading…</string>
-    <string name="state_error">Something went wrong</string>
+    <string name="state_error_message">Error: %1$s</string>
     <string name="action_retry">Retry</string>
+    <string name="action_retry_loading">Retry loading</string>
+    <string name="action_back">Back</string>
     <string name="content_description_menu">Menu</string>
 </resources>

@@ -41,9 +41,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.rim.droid.R
 import com.rim.droid.domain.entity.Episode
 import com.rim.droid.presentation.theme.rimColors
 import com.rim.droid.presentation.ui.common.CharacterAvatarCircle
@@ -71,7 +73,7 @@ fun EpisodeDetailScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
                     }
                 },
                 actions = {
@@ -179,7 +181,7 @@ fun EpisodeDetailScreen(
             // Characters section
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "Персонажи (${episode.characterIds.size})",
+                    text = stringResource(R.string.section_characters_count, episode.characterIds.size),
                     style = MaterialTheme.typography.titleMedium,
                     color = rimColors.primary,
                     fontWeight = FontWeight.W700,
@@ -187,7 +189,7 @@ fun EpisodeDetailScreen(
                 Spacer(modifier = Modifier.height(12.dp))
                 if (episode.characterIds.isEmpty()) {
                     Text(
-                        text = "Нет персонажей",
+                        text = stringResource(R.string.no_characters),
                         style = MaterialTheme.typography.bodyMedium,
                         color = rimColors.textSecondary,
                     )

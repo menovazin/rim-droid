@@ -42,9 +42,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.rim.droid.R
 import com.rim.droid.domain.entity.Location
 import com.rim.droid.presentation.theme.rimColors
 import com.rim.droid.presentation.ui.common.CharacterAvatarCircle
@@ -73,7 +75,7 @@ fun LocationDetailScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
                     }
                 },
                 actions = {
@@ -178,7 +180,7 @@ fun LocationDetailScreen(
             // Residents section
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "Резиденты (${location.residentIds.size})",
+                    text = stringResource(R.string.section_residents_count, location.residentIds.size),
                     style = MaterialTheme.typography.titleMedium,
                     color = rimColors.primary,
                     fontWeight = FontWeight.W700,
@@ -186,7 +188,7 @@ fun LocationDetailScreen(
                 Spacer(modifier = Modifier.height(12.dp))
                 if (location.residentIds.isEmpty()) {
                     Text(
-                        text = "Нет резидентов",
+                        text = stringResource(R.string.no_residents),
                         style = MaterialTheme.typography.bodyMedium,
                         color = rimColors.textSecondary,
                     )

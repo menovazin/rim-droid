@@ -41,7 +41,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.rim.droid.R
 import com.rim.droid.presentation.theme.rimColors
 
 @Composable
@@ -101,7 +103,7 @@ fun LoginScreen(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = "Войдите, чтобы открыть портал",
+                        text = stringResource(R.string.login_subtitle),
                         style = MaterialTheme.typography.bodyMedium,
                         color = colors.textSecondary,
                         textAlign = TextAlign.Center,
@@ -112,7 +114,7 @@ fun LoginScreen(
                     OutlinedTextField(
                         value = name,
                         onValueChange = { name = it },
-                        label = { Text("Имя") },
+                        label = { Text(stringResource(R.string.login_hint_name)) },
                         singleLine = true,
                         leadingIcon = {
                             Icon(
@@ -163,7 +165,7 @@ fun LoginScreen(
                             )
                         } else {
                             Text(
-                                text = "Войти",
+                                text = stringResource(R.string.login_button),
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Medium,
                             )

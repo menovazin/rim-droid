@@ -36,10 +36,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
+import com.rim.droid.R
 import com.rim.droid.domain.entity.Character
 import com.rim.droid.presentation.theme.rimColors
 import com.rim.droid.presentation.ui.common.DetailChip
@@ -69,7 +71,7 @@ fun CharacterDetailScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
                     }
                 },
                 actions = {
@@ -120,20 +122,20 @@ fun CharacterDetailScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                DetailInfoRow(label = "Вид", value = character.species)
+                DetailInfoRow(label = stringResource(R.string.detail_species), value = character.species)
                 if (character.type.isNotBlank()) {
-                    DetailInfoRow(label = "Тип", value = character.type)
+                    DetailInfoRow(label = stringResource(R.string.detail_type), value = character.type)
                 }
                 DetailInfoRow(
-                    label = "Пол",
+                    label = stringResource(R.string.detail_gender),
                     value = "${character.gender.genderSymbol()}  ${character.gender}",
                 )
-                DetailInfoRow(label = "Происхождение", value = character.origin)
-                DetailInfoRow(label = "Локация", value = character.location)
+                DetailInfoRow(label = stringResource(R.string.detail_origin), value = character.origin)
+                DetailInfoRow(label = stringResource(R.string.detail_location), value = character.location)
 
                 if (character.episodeIds.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
-                    DetailSectionTitle(title = "Эпизоды (${character.episodeIds.size})")
+                    DetailSectionTitle(title = stringResource(R.string.section_episodes_count, character.episodeIds.size))
                     Spacer(modifier = Modifier.height(8.dp))
                     FlowRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),

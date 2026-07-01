@@ -1,5 +1,6 @@
 package com.rim.droid.presentation.ui.home
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -44,11 +45,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.rim.droid.R
 import com.rim.droid.presentation.theme.RimBaseColors
 import com.rim.droid.presentation.theme.RimTheme
 import com.rim.droid.presentation.theme.rimColors
@@ -63,10 +66,10 @@ import com.rim.droid.domain.entity.Episode
 import com.rim.droid.domain.entity.Location
 import kotlinx.coroutines.launch
 
-enum class Section(val title: String, val icon: ImageVector) {
-    CHARACTERS("Персонажи", Icons.Outlined.PeopleAlt),
-    EPISODES("Эпизоды", Icons.Outlined.Movie),
-    LOCATIONS("Локации", Icons.Outlined.Public),
+enum class Section(@StringRes val titleResId: Int, val icon: ImageVector) {
+    CHARACTERS(R.string.section_characters, Icons.Outlined.PeopleAlt),
+    EPISODES(R.string.section_episodes, Icons.Outlined.Movie),
+    LOCATIONS(R.string.section_locations, Icons.Outlined.Public),
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -105,7 +108,7 @@ fun HomeScreen(
                 CenterAlignedTopAppBar(
                     title = {
                         Text(
-                            text = currentSection.title,
+                            text = stringResource(currentSection.titleResId),
                             color = rimColors.textPrimary,
                             textAlign = TextAlign.Center,
                         )
@@ -114,7 +117,7 @@ fun HomeScreen(
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
                             Icon(
                                 imageVector = Icons.Default.Menu,
-                                contentDescription = "Меню",
+                                contentDescription = stringResource(R.string.content_description_menu),
                             )
                         }
                     },
@@ -214,7 +217,7 @@ private fun RimDrawerContent(
             Section.entries.forEach { section ->
                 RimDrawerItem(
                     icon = section.icon,
-                    label = section.title,
+                    label = stringResource(section.titleResId),
                     selected = currentSection == section,
                     onClick = { onSectionClick(section) },
                 )
@@ -230,7 +233,7 @@ private fun RimDrawerContent(
             // Logout
             RimDrawerItem(
                 icon = Icons.AutoMirrored.Outlined.Logout,
-                label = "Выйти",
+                label = stringResource(R.string.action_logout),
                 selected = false,
                 onClick = onLogout,
             )
