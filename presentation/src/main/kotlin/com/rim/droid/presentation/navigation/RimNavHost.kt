@@ -23,6 +23,7 @@ import kotlin.reflect.typeOf
 fun RimNavHost(
     hasToken: Boolean,
     onLogout: () -> Unit,
+    onToggleTheme: () -> Unit,
 ) {
     val navController = rememberNavController()
     val startDestination = if (hasToken) HomeRoute else LoginRoute
@@ -58,6 +59,7 @@ fun RimNavHost(
                         popUpTo<HomeRoute> { inclusive = true }
                     }
                 },
+                onToggleTheme = onToggleTheme,
             )
         }
 

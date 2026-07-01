@@ -6,6 +6,7 @@
     <string name="section_episodes">Episodes</string>
     <string name="section_locations">Locations</string>
     <string name="action_logout">Logout</string>
+    <string name="action_toggle_theme">Toggle theme</string>
 
     <!-- Login -->
     <string name="login_subtitle">Sign in to open the portal</string>

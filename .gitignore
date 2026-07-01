@@ -96,6 +96,9 @@ openspec/archive/
 skills-lock.json
 .cline/
 .clinerules/
+.github/
+.opencode/
+AGENTS.md
 
 # Reference materials (not for VCS)
 design-refs/

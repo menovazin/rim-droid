@@ -16,6 +16,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.outlined.DarkMode
+import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material.icons.outlined.Movie
 import androidx.compose.material.icons.outlined.PeopleAlt
 import androidx.compose.material.icons.outlined.Public
@@ -44,6 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -79,6 +82,7 @@ fun HomeScreen(
     onEpisodeClick: (Episode) -> Unit,
     onLocationClick: (Location) -> Unit,
     onLogout: () -> Unit,
+    onToggleTheme: () -> Unit,
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -92,6 +96,7 @@ fun HomeScreen(
         drawerContent = {
             RimDrawerContent(
                 currentSection = currentSection,
+                onToggleTheme = onToggleTheme,
                 onSectionClick = { section ->
                     currentSection = section
                     scope.launch { drawerState.close() }
@@ -176,13 +181,15 @@ fun HomeScreen(
 @Composable
 private fun RimDrawerContent(
     currentSection: Section,
+    onToggleTheme: () -> Unit,
     onSectionClick: (Section) -> Unit,
     onLogout: () -> Unit,
 ) {
     val rimColors = MaterialTheme.rimColors
+    val isDark = rimColors.background.luminance() < 0.5f
 
     ModalDrawerSheet(
-        drawerContainerColor = RimBaseColors.black,
+        drawerContainerColor = if (isDark) RimBaseColors.black else rimColors.surface,
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -205,7 +212,15 @@ private fun RimDrawerContent(
                         color = rimColors.textPrimary,
                         fontWeight = FontWeight.W700,
                     ),
+                    modifier = Modifier.weight(1f),
                 )
+                IconButton(onClick = onToggleTheme) {
+                    Icon(
+                        imageVector = if (isDark) Icons.Outlined.LightMode else Icons.Outlined.DarkMode,
+                        contentDescription = stringResource(R.string.action_toggle_theme),
+                        tint = rimColors.textPrimary,
+                    )
+                }
             }
 
             HorizontalDivider(
@@ -294,6 +309,7 @@ private fun RimDrawerContentPreview() {
     RimTheme {
         RimDrawerContent(
             currentSection = Section.CHARACTERS,
+            onToggleTheme = {},
             onSectionClick = {},
             onLogout = {},
         )
