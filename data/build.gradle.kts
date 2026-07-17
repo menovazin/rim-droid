@@ -13,10 +13,12 @@ android {
         minSdk = libs.versions.minSdk.get().toInt()
         val baseUrl = project.findProperty("BASE_URL") as? String ?: "https://alpha.syazy.com:1180/api/"
         buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
         release {
+            // R8 runs on the app module; keep library minify off for project deps.
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
