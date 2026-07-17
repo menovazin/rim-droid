@@ -41,7 +41,7 @@ import coil.compose.SubcomposeAsyncImage
 import com.rim.droid.R
 import com.rim.droid.domain.entity.Character
 import com.rim.droid.presentation.theme.rimColors
-import com.rim.droid.presentation.util.AvatarUrlUtils
+import com.rim.droid.data.util.AvatarUrlUtils
 import com.rim.droid.presentation.util.statusColor
 
 @Composable
@@ -143,7 +143,7 @@ private fun CharacterCard(
             .clickable(onClick = onClick),
     ) {
         SubcomposeAsyncImage(
-            model = AvatarUrlUtils.avatarUrlFromId(character.id),
+            model = AvatarUrlUtils.getCustomAvatarUrl(character.image),
             contentDescription = character.name,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxWidth().weight(1f),

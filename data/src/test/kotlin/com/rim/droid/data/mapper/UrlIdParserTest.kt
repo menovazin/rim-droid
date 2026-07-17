@@ -1,13 +1,14 @@
 package com.rim.droid.data.mapper
 
 import com.google.common.truth.Truth.assertThat
+import com.rim.droid.data.BuildConfig
 import org.junit.Test
 
 class UrlIdParserTest {
 
     @Test
     fun `trailingIdOrNull extracts id from valid URL`() {
-        assertThat("https://rickandmortyapi.com/api/episode/12".trailingIdOrNull()).isEqualTo(12)
+        assertThat("${BuildConfig.BASE_URL}episode/12".trailingIdOrNull()).isEqualTo(12)
     }
 
     @Test
@@ -18,8 +19,8 @@ class UrlIdParserTest {
     @Test
     fun `toIds converts list of URLs to list of ids`() {
         val urls = listOf(
-            "https://rickandmortyapi.com/api/character/1",
-            "https://rickandmortyapi.com/api/character/42",
+            "${BuildConfig.BASE_URL}character/1",
+            "${BuildConfig.BASE_URL}character/42",
         )
         assertThat(urls.toIds()).containsExactly(1, 42)
     }

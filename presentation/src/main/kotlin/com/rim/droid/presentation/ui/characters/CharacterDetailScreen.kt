@@ -47,7 +47,7 @@ import com.rim.droid.presentation.theme.rimColors
 import com.rim.droid.presentation.ui.common.DetailChip
 import com.rim.droid.presentation.ui.common.DetailInfoRow
 import com.rim.droid.presentation.ui.common.DetailSectionTitle
-import com.rim.droid.presentation.util.AvatarUrlUtils
+import com.rim.droid.data.util.AvatarUrlUtils
 import com.rim.droid.presentation.util.genderSymbol
 import com.rim.droid.presentation.util.statusColor
 
@@ -100,7 +100,7 @@ fun CharacterDetailScreen(
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState()),
         ) {
-            CharacterImage(characterId = character.id, characterName = character.name)
+            CharacterImage(imageUrl = character.image, characterName = character.name)
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -152,7 +152,7 @@ fun CharacterDetailScreen(
 }
 
 @Composable
-private fun CharacterImage(characterId: Int, characterName: String) {
+private fun CharacterImage(imageUrl: String, characterName: String) {
     val rimColors = MaterialTheme.rimColors
     Box(
         modifier = Modifier
@@ -161,7 +161,7 @@ private fun CharacterImage(characterId: Int, characterName: String) {
             .fillMaxWidth(),
     ) {
         SubcomposeAsyncImage(
-            model = AvatarUrlUtils.avatarUrlFromId(characterId),
+            model = AvatarUrlUtils.getCustomAvatarUrl(imageUrl),
             contentDescription = characterName,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),

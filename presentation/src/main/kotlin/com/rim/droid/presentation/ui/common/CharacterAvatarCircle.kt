@@ -21,7 +21,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.rim.droid.presentation.theme.rimColors
-import com.rim.droid.presentation.util.AvatarUrlUtils
+import com.rim.droid.data.util.AvatarUrlUtils
 
 @Composable
 fun CharacterAvatarCircle(

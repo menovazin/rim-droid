@@ -32,10 +32,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val themeType = settingsState.themeType.collectAsState().value
-            val isLight = themeType == ThemeType.LIGHT ||
-                (themeType == ThemeType.SYSTEM &&
-                    resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK !=
-                        Configuration.UI_MODE_NIGHT_YES)
+            val isLight = isLightTheme(themeType)
             SideEffect {
                 WindowCompat.getInsetsController(window, window.decorView)
                     .isAppearanceLightStatusBars = isLight
@@ -47,6 +44,15 @@ class MainActivity : ComponentActivity() {
                     onToggleTheme = { settingsState.toggleTheme() },
                 )
             }
+        }
+    }
+
+    private fun isLightTheme(themeType: ThemeType): Boolean = when (themeType) {
+        ThemeType.LIGHT -> true
+        ThemeType.DARK -> false
+        ThemeType.SYSTEM -> {
+            val nightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+            nightMode != Configuration.UI_MODE_NIGHT_YES
         }
     }
 }

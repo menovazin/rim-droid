@@ -9,6 +9,9 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
+/**
+ * spec: theme-selection / Theme switching
+ */
 class SettingsStateTest {
 
     private lateinit var repository: ThemeRepository

@@ -11,7 +11,8 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
-        buildConfigField("String", "BASE_URL", "\"https://rickandmortyapi.com/api/\"")
+        val baseUrl = project.findProperty("BASE_URL") as? String ?: "https://alpha.syazy.com:1180/api/"
+        buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
     }
 
     buildTypes {
@@ -23,6 +24,12 @@ android {
 
     buildFeatures {
         buildConfig = true
+    }
+
+    testOptions {
+        unitTests {
+            isReturnDefaultValues = true
+        }
     }
 }
 

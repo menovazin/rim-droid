@@ -99,6 +99,8 @@ skills-lock.json
 .clinerules/
 .github/
 .opencode/
+docs/
+openspec/
 AGENTS.md
 
 # Reference materials (not for VCS)

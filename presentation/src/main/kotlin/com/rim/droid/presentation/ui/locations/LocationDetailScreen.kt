@@ -35,7 +35,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -48,6 +47,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.rim.droid.R
 import com.rim.droid.domain.entity.Location
+import com.rim.droid.presentation.theme.RimDesignTokens
 import com.rim.droid.presentation.theme.rimColors
 import com.rim.droid.presentation.ui.common.CharacterAvatarCircle
 import com.rim.droid.presentation.util.locationTypeIcon
@@ -108,99 +108,121 @@ fun LocationDetailScreen(
                 }
                 .graphicsLayer(scaleX = scale, scaleY = scale),
         ) {
-            // Gradient card with icon and badges
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(
-                        Brush.linearGradient(
-                            colors = listOf(
-                                rimColors.secondary.copy(alpha = 0.15f),
-                                rimColors.surface,
-                            ),
-                        ),
-                    )
-                    .padding(20.dp),
-            ) {
-                Column {
-                    Icon(
-                        imageVector = location.type.locationTypeIcon(),
-                        contentDescription = location.type,
-                        tint = rimColors.secondary,
-                        modifier = Modifier.size(40.dp),
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
+            LocationHeaderCard(
+                location = location,
+                locType = locType,
+                dim = dim,
+                rimColors = rimColors,
+            )
+            LocationResidentsSection(location = location, rimColors = rimColors)
+        }
+    }
+}
+
+@Composable
+private fun LocationHeaderCard(
+    location: Location,
+    locType: String,
+    dim: String,
+    rimColors: RimDesignTokens,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(
+                Brush.linearGradient(
+                    colors = listOf(
+                        rimColors.secondary.copy(alpha = 0.15f),
+                        rimColors.surface,
+                    ),
+                ),
+            )
+            .padding(20.dp),
+    ) {
+        Column {
+            Icon(
+                imageVector = location.type.locationTypeIcon(),
+                contentDescription = location.type,
+                tint = rimColors.secondary,
+                modifier = Modifier.size(40.dp),
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = location.name,
+                style = MaterialTheme.typography.headlineSmall,
+                color = rimColors.textPrimary,
+                fontWeight = FontWeight.W700,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Row {
+                // Type badge (filled)
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(rimColors.secondary)
+                        .padding(horizontal = 10.dp, vertical = 4.dp),
+                ) {
                     Text(
-                        text = location.name,
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = rimColors.textPrimary,
-                        fontWeight = FontWeight.W700,
+                        text = locType,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = rimColors.onSecondary,
+                        fontWeight = FontWeight.W600,
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Row {
-                        // Type badge (filled)
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(rimColors.secondary)
-                                .padding(horizontal = 10.dp, vertical = 4.dp),
-                        ) {
-                            Text(
-                                text = locType,
-                                style = MaterialTheme.typography.labelMedium,
-                                color = rimColors.onSecondary,
-                                fontWeight = FontWeight.W600,
-                            )
-                        }
-                        Spacer(modifier = Modifier.size(8.dp))
-                        // Dimension badge (outlined)
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(8.dp))
-                                .border(
-                                    width = 1.dp,
-                                    color = rimColors.secondary.copy(alpha = 0.4f),
-                                    shape = RoundedCornerShape(8.dp),
-                                )
-                                .padding(horizontal = 10.dp, vertical = 4.dp),
-                        ) {
-                            Text(
-                                text = dim,
-                                style = MaterialTheme.typography.labelMedium,
-                                color = rimColors.secondary,
-                                fontWeight = FontWeight.W600,
-                            )
-                        }
-                    }
+                }
+                Spacer(modifier = Modifier.size(8.dp))
+                // Dimension badge (outlined)
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .border(
+                            width = 1.dp,
+                            color = rimColors.secondary.copy(alpha = 0.4f),
+                            shape = RoundedCornerShape(8.dp),
+                        )
+                        .padding(horizontal = 10.dp, vertical = 4.dp),
+                ) {
+                    Text(
+                        text = dim,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = rimColors.secondary,
+                        fontWeight = FontWeight.W600,
+                    )
                 }
             }
+        }
+    }
+}
 
-            // Residents section
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = stringResource(R.string.section_residents_count, location.residentIds.size),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = rimColors.primary,
-                    fontWeight = FontWeight.W700,
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                if (location.residentIds.isEmpty()) {
-                    Text(
-                        text = stringResource(R.string.no_residents),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = rimColors.textSecondary,
-                    )
-                } else {
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(vertical = 4.dp),
-                    ) {
-                        items(location.residentIds) { residentId ->
-                            CharacterAvatarCircle(characterId = residentId, name = "#$residentId")
-                        }
-                    }
+@Composable
+private fun LocationResidentsSection(
+    location: Location,
+    rimColors: RimDesignTokens,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier.padding(16.dp)) {
+        Text(
+            text = stringResource(R.string.section_residents_count, location.residentIds.size),
+            style = MaterialTheme.typography.titleMedium,
+            color = rimColors.primary,
+            fontWeight = FontWeight.W700,
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        if (location.residentIds.isEmpty()) {
+            Text(
+                text = stringResource(R.string.no_residents),
+                style = MaterialTheme.typography.bodyMedium,
+                color = rimColors.textSecondary,
+            )
+        } else {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(vertical = 4.dp),
+            ) {
+                items(location.residentIds) { residentId ->
+                    CharacterAvatarCircle(characterId = residentId, name = "#$residentId")
                 }
             }
         }

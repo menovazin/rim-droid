@@ -5,12 +5,11 @@ def excludeClasses = [
         "*ComposableSingletons*",
         "*ComposeKt",
         "*_Factory*", "*_Factory\$*",
-        "*Hilt_*", "*_Hilt*",
+        "*_Hilt_*", "*_Hilt*",
         "*_GeneratedInjector", "*_HiltModules*",
         "dagger.hilt.internal.*",
-        // DTO / mappers / di
+        // DTO / di
         "com.rim.droid.data.dto.*",
-        "com.rim.droid.data.mapper.*",
         "*.di.*",
 ]
 

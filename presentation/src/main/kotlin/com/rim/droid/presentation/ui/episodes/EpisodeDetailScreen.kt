@@ -34,7 +34,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -47,6 +46,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.rim.droid.R
 import com.rim.droid.domain.entity.Episode
+import com.rim.droid.presentation.theme.RimDesignTokens
 import com.rim.droid.presentation.theme.rimColors
 import com.rim.droid.presentation.ui.common.CharacterAvatarCircle
 import com.rim.droid.presentation.util.season
@@ -106,102 +106,117 @@ fun EpisodeDetailScreen(
                 }
                 .graphicsLayer(scaleX = scale, scaleY = scale),
         ) {
-            val s = episode.episodeCode.season
-            val e = episode.episodeCode.episodeNumber
+            EpisodeHeaderCard(episode = episode, rimColors = rimColors)
+            EpisodeCharactersSection(episode = episode, rimColors = rimColors)
+        }
+    }
+}
 
-            // Gradient card with badges
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(
-                        Brush.linearGradient(
-                            colors = listOf(
-                                rimColors.primary.copy(alpha = 0.15f),
-                                rimColors.surface,
-                            ),
-                        ),
-                    )
-                    .padding(20.dp),
-            ) {
-                Column {
-                    Row {
-                        // S01 badge (filled)
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(rimColors.primary)
-                                .padding(horizontal = 10.dp, vertical = 4.dp),
-                        ) {
-                            Text(
-                                text = "S%02d".format(s),
-                                style = MaterialTheme.typography.labelLarge,
-                                color = rimColors.onPrimary,
-                                fontWeight = FontWeight.W700,
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(8.dp))
-                        // E01 badge (outlined)
-                        Box(
-                            modifier = Modifier
-                                .padding(start = 8.dp)
-                                .clip(RoundedCornerShape(8.dp))
-                                .border(
-                                    width = 1.dp,
-                                    color = rimColors.primary.copy(alpha = 0.4f),
-                                    shape = RoundedCornerShape(8.dp),
-                                )
-                                .padding(horizontal = 10.dp, vertical = 4.dp),
-                        ) {
-                            Text(
-                                text = "E%02d".format(e),
-                                style = MaterialTheme.typography.labelLarge,
-                                color = rimColors.primary,
-                                fontWeight = FontWeight.W700,
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(12.dp))
+@Composable
+private fun EpisodeHeaderCard(
+    episode: Episode,
+    rimColors: RimDesignTokens,
+    modifier: Modifier = Modifier,
+) {
+    val s = episode.episodeCode.season
+    val e = episode.episodeCode.episodeNumber
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(
+                Brush.linearGradient(
+                    colors = listOf(
+                        rimColors.primary.copy(alpha = 0.15f),
+                        rimColors.surface,
+                    ),
+                ),
+            )
+            .padding(20.dp),
+    ) {
+        Column {
+            Row {
+                // S01 badge (filled)
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(rimColors.primary)
+                        .padding(horizontal = 10.dp, vertical = 4.dp),
+                ) {
                     Text(
-                        text = episode.name,
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = rimColors.textPrimary,
+                        text = "S%02d".format(s),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = rimColors.onPrimary,
                         fontWeight = FontWeight.W700,
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                // E01 badge (outlined)
+                Box(
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .border(
+                            width = 1.dp,
+                            color = rimColors.primary.copy(alpha = 0.4f),
+                            shape = RoundedCornerShape(8.dp),
+                        )
+                        .padding(horizontal = 10.dp, vertical = 4.dp),
+                ) {
                     Text(
-                        text = episode.airDate,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = rimColors.textSecondary,
+                        text = "E%02d".format(e),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = rimColors.primary,
+                        fontWeight = FontWeight.W700,
                     )
                 }
             }
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = episode.name,
+                style = MaterialTheme.typography.headlineSmall,
+                color = rimColors.textPrimary,
+                fontWeight = FontWeight.W700,
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = episode.airDate,
+                style = MaterialTheme.typography.bodyMedium,
+                color = rimColors.textSecondary,
+            )
+        }
+    }
+}
 
-            // Characters section
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = stringResource(R.string.section_characters_count, episode.characterIds.size),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = rimColors.primary,
-                    fontWeight = FontWeight.W700,
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                if (episode.characterIds.isEmpty()) {
-                    Text(
-                        text = stringResource(R.string.no_characters),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = rimColors.textSecondary,
-                    )
-                } else {
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(vertical = 4.dp),
-                    ) {
-                        items(episode.characterIds) { characterId ->
-                            CharacterAvatarCircle(characterId = characterId, name = "#$characterId")
-                        }
-                    }
+@Composable
+private fun EpisodeCharactersSection(
+    episode: Episode,
+    rimColors: RimDesignTokens,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier.padding(16.dp)) {
+        Text(
+            text = stringResource(R.string.section_characters_count, episode.characterIds.size),
+            style = MaterialTheme.typography.titleMedium,
+            color = rimColors.primary,
+            fontWeight = FontWeight.W700,
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        if (episode.characterIds.isEmpty()) {
+            Text(
+                text = stringResource(R.string.no_characters),
+                style = MaterialTheme.typography.bodyMedium,
+                color = rimColors.textSecondary,
+            )
+        } else {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(vertical = 4.dp),
+            ) {
+                items(episode.characterIds) { characterId ->
+                    CharacterAvatarCircle(characterId = characterId, name = "#$characterId")
                 }
             }
         }

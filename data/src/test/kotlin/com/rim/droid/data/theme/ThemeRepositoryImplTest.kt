@@ -10,6 +10,9 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 
+/**
+ * spec: theme-selection / Theme switching
+ */
 class ThemeRepositoryImplTest {
 
     private lateinit var prefs: SharedPreferences
