@@ -17,7 +17,7 @@ android {
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.rim.droid.presentation.RimHiltTestRunner"
         resourceConfigurations += setOf("en")
     }
 
@@ -89,4 +89,11 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     testImplementation(project(":core-test"))
+
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.compose.ui.test.junit4)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.hilt.android.testing)
+    kspAndroidTest(libs.hilt.compiler)
 }
