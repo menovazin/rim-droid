@@ -132,11 +132,12 @@ fun CharactersScreen(
 private fun CharacterCard(
     character: Character,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val rimColors = MaterialTheme.rimColors
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .aspectRatio(0.72f)
             .clip(RoundedCornerShape(12.dp))

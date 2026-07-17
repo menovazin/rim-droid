@@ -50,6 +50,7 @@ import com.rim.droid.presentation.theme.rimColors
 fun LoginScreen(
     viewModel: LoginViewModel,
     onLoginSuccess: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val isSubmitting by viewModel.isSubmitting.collectAsStateWithLifecycle()
     var name by remember { mutableStateOf("") }
@@ -65,6 +66,7 @@ fun LoginScreen(
     val colors = MaterialTheme.rimColors
 
     Scaffold(
+        modifier = modifier,
         containerColor = colors.background,
     ) { padding ->
         Box(

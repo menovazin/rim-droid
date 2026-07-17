@@ -55,10 +55,12 @@ import com.rim.droid.presentation.util.statusColor
 fun CharacterDetailScreen(
     character: Character,
     onBack: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val rimColors = MaterialTheme.rimColors
 
     Scaffold(
+        modifier = modifier,
         containerColor = rimColors.background,
         topBar = {
             CenterAlignedTopAppBar(
@@ -151,10 +153,14 @@ fun CharacterDetailScreen(
 }
 
 @Composable
-private fun CharacterImage(imageUrl: String, characterName: String) {
+private fun CharacterImage(
+    imageUrl: String,
+    characterName: String,
+    modifier: Modifier = Modifier,
+) {
     val rimColors = MaterialTheme.rimColors
     Box(
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(16.dp))
             .aspectRatio(1f)
             .fillMaxWidth(),

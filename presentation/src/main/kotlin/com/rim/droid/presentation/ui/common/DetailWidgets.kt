@@ -21,9 +21,13 @@ import com.rim.droid.presentation.theme.rimColors
  * Ported from Flutter `DetailInfoRow`.
  */
 @Composable
-fun DetailInfoRow(label: String, value: String) {
+fun DetailInfoRow(
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier,
+) {
     val rimColors = MaterialTheme.rimColors
-    Row(modifier = Modifier.padding(vertical = 6.dp)) {
+    Row(modifier = modifier.padding(vertical = 6.dp)) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
@@ -45,13 +49,17 @@ fun DetailInfoRow(label: String, value: String) {
  * Ported from Flutter `DetailSectionTitle`.
  */
 @Composable
-fun DetailSectionTitle(title: String) {
+fun DetailSectionTitle(
+    title: String,
+    modifier: Modifier = Modifier,
+) {
     val rimColors = MaterialTheme.rimColors
     Text(
         text = title,
         style = MaterialTheme.typography.titleMedium,
         color = rimColors.primary,
         fontWeight = FontWeight.W700,
+        modifier = modifier,
     )
 }
 
@@ -60,10 +68,13 @@ fun DetailSectionTitle(title: String) {
  * Ported from Flutter `DetailChip`.
  */
 @Composable
-fun DetailChip(label: String) {
+fun DetailChip(
+    label: String,
+    modifier: Modifier = Modifier,
+) {
     val rimColors = MaterialTheme.rimColors
     Box(
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(8.dp))
             .background(rimColors.surface)
             .border(

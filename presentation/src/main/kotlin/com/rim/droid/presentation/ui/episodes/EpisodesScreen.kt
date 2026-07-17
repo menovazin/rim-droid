@@ -128,13 +128,14 @@ fun EpisodesScreen(
 private fun EpisodeCard(
     episode: Episode,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val rimColors = MaterialTheme.rimColors
     val s = episode.episodeCode.season
     val e = episode.episodeCode.episodeNumber
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
             .background(rimColors.surface)

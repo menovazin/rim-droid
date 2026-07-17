@@ -57,11 +57,13 @@ import com.rim.droid.presentation.util.episodeNumber
 fun EpisodeDetailScreen(
     episode: Episode,
     onBack: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val rimColors = MaterialTheme.rimColors
     var scale by remember { mutableFloatStateOf(1f) }
 
     Scaffold(
+        modifier = modifier,
         containerColor = rimColors.background,
         topBar = {
             CenterAlignedTopAppBar(

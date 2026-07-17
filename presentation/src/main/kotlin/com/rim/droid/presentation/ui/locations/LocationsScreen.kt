@@ -124,11 +124,12 @@ fun LocationsScreen(
 private fun LocationCard(
     location: Location,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val rimColors = MaterialTheme.rimColors
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
             .background(rimColors.surface)

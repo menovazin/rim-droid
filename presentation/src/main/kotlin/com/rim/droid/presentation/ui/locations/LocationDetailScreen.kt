@@ -57,6 +57,7 @@ import com.rim.droid.presentation.util.locationTypeIcon
 fun LocationDetailScreen(
     location: Location,
     onBack: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val rimColors = MaterialTheme.rimColors
     var scale by remember { mutableFloatStateOf(1f) }
@@ -64,6 +65,7 @@ fun LocationDetailScreen(
     val dim = location.dimension.ifEmpty { "Unknown" }
 
     Scaffold(
+        modifier = modifier,
         containerColor = rimColors.background,
         topBar = {
             CenterAlignedTopAppBar(

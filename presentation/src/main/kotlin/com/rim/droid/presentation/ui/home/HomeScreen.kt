@@ -83,6 +83,7 @@ fun HomeScreen(
     onLocationClick: (Location) -> Unit,
     onLogout: () -> Unit,
     onToggleTheme: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -91,6 +92,7 @@ fun HomeScreen(
     val saveableStateHolder = rememberSaveableStateHolder()
 
     ModalNavigationDrawer(
+        modifier = modifier,
         drawerState = drawerState,
         scrimColor = Color.Black.copy(alpha = 0.4f),
         drawerContent = {
@@ -184,11 +186,13 @@ private fun RimDrawerContent(
     onToggleTheme: () -> Unit,
     onSectionClick: (Section) -> Unit,
     onLogout: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val rimColors = MaterialTheme.rimColors
     val isDark = rimColors.background.luminance() < 0.5f
 
     ModalDrawerSheet(
+        modifier = modifier,
         drawerContainerColor = if (isDark) RimBaseColors.black else rimColors.surface,
     ) {
         Column(
@@ -264,6 +268,7 @@ private fun RimDrawerItem(
     label: String,
     selected: Boolean,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val rimColors = MaterialTheme.rimColors
     val backgroundColor = if (selected) {
@@ -276,7 +281,7 @@ private fun RimDrawerItem(
     val fontWeight = if (selected) FontWeight.W700 else FontWeight.W500
 
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 4.dp)
             .clip(RoundedCornerShape(10.dp))
