@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import coil.compose.SubcomposeAsyncImage
 import com.rim.droid.presentation.theme.rimColors
+import com.smarttoolfactory.zoom.EnhancedZoomData
 import com.smarttoolfactory.zoom.enhancedZoom
 import com.smarttoolfactory.zoom.rememberEnhancedZoomState
 import kotlinx.coroutines.launch
@@ -34,6 +35,10 @@ import kotlinx.coroutines.launch
 private const val MIN_ZOOM = 1f
 private const val MAX_ZOOM = 3f
 private const val ZOOM_ACTIVE_THRESHOLD = 1.01f
+private const val PAN_ACTIVE_THRESHOLD_PX = 1f
+
+private fun EnhancedZoomData.isVisuallyTransformed(): Boolean =
+    zoom > ZOOM_ACTIVE_THRESHOLD || pan.getDistance() > PAN_ACTIVE_THRESHOLD_PX
 
 /**
  * Coil-backed network image with transient pinch-to-zoom (Compose-Zoom).
@@ -61,9 +66,9 @@ fun ZoomableNetworkImage(
     val rimColors = MaterialTheme.rimColors
     val scope = rememberCoroutineScope()
     var layoutSize by remember { mutableStateOf(IntSize.Zero) }
-    // Elevated for draw order while gesture runs or scale > 1 (including reset animation).
+    // Elevated for draw order while gesture runs or transform is active (including reset animation).
     var isElevated by remember { mutableStateOf(false) }
-    // Rest clip only when scale is at identity (not merely between pointer events).
+    // Rest clip only at identity (zoom ≈ 1 and pan ≈ 0), not merely between pointer events.
     var isVisuallyZoomed by remember { mutableStateOf(false) }
 
     fun setElevated(active: Boolean) {
@@ -103,11 +108,10 @@ fun ZoomableNetworkImage(
                 enabled = { _, _, _ -> true },
                 zoomOnDoubleTap = { MIN_ZOOM },
                 onGestureStart = {
-                    isVisuallyZoomed = true
                     setElevated(true)
                 },
                 onGesture = { data ->
-                    isVisuallyZoomed = true
+                    isVisuallyZoomed = data.isVisuallyTransformed()
                     setElevated(true)
                 },
                 onGestureEnd = {
