@@ -103,10 +103,11 @@ fun ZoomableNetworkImage(
                 enabled = { _, _, _ -> true },
                 zoomOnDoubleTap = { MIN_ZOOM },
                 onGestureStart = {
+                    isVisuallyZoomed = true
                     setElevated(true)
                 },
                 onGesture = { data ->
-                    isVisuallyZoomed = data.zoom > ZOOM_ACTIVE_THRESHOLD
+                    isVisuallyZoomed = true
                     setElevated(true)
                 },
                 onGestureEnd = {

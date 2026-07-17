@@ -57,7 +57,7 @@ fun EnhancedZoomableImage(
     colorFilter: ColorFilter? = null,
     filterQuality: FilterQuality = DrawScope.DefaultFilterQuality,
     initialZoom: Float = 1f,
-    minZoom: Float = .5f,
+    minZoom: Float = 1f,
     maxZoom: Float = 5f,
     limitPan: Boolean = true,
     fling: Boolean = false,

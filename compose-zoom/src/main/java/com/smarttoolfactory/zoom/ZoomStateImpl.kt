@@ -31,8 +31,8 @@ open class ZoomState(
     internal open val limitPan: Boolean = false
 ) {
 
-    internal val zoomMin = minZoom.coerceAtLeast(.5f)
-    internal val zoomMax = maxZoom.coerceAtLeast(1f)
+    internal val zoomMin = minZoom.coerceAtLeast(1f)
+    internal val zoomMax = maxZoom.coerceAtLeast(zoomMin)
     internal val zoomInitial = initialZoom.coerceIn(zoomMin, zoomMax)
     internal val rotationInitial = initialRotation % 360
 
@@ -97,7 +97,8 @@ open class ZoomState(
         zoomChange: Float,
         rotationChange: Float = 1f,
     ) {
-        val newZoom = (this.zoom * zoomChange).coerceIn(zoomMin, zoomMax)
+        val oldZoom = this.zoom
+        val newZoom = (oldZoom * zoomChange).coerceIn(zoomMin, zoomMax)
 
         snapZoomTo(newZoom)
         val newRotation = if (rotatable) {
@@ -108,7 +109,7 @@ open class ZoomState(
         snapRotationTo(newRotation)
 
         if (pannable) {
-            val newPan = this.pan + panChange.times(this.zoom)
+            val newPan = this.pan + panChange
             val boundPan = limitPan && !rotatable
 
             if (boundPan) {

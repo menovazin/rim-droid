@@ -45,7 +45,7 @@ import kotlinx.coroutines.launch
 open class EnhancedZoomState constructor(
     val imageSize: IntSize,
     initialZoom: Float = 1f,
-    minZoom: Float = .5f,
+    minZoom: Float = 1f,
     maxZoom: Float = 5f,
     fling: Boolean = false,
     moveToBounds: Boolean = true,
@@ -116,7 +116,7 @@ open class EnhancedZoomState constructor(
 
 open class BaseEnhancedZoomState constructor(
     initialZoom: Float = 1f,
-    minZoom: Float = .5f,
+    minZoom: Float = 1f,
     maxZoom: Float = 5f,
     val fling: Boolean = true,
     val moveToBounds: Boolean = true,
