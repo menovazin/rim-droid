@@ -4,7 +4,7 @@ androidGradlePlugin = "8.13.2"
 kotlin = "2.0.20"
 ksp = "2.0.20-1.0.25"
 jdk = "18"
-compileSdk = "34"
+compileSdk = "35"
 minSdk = "26"
 targetSdk = "34"
 
@@ -32,6 +32,8 @@ paging = "3.3.2"
 
 # Image loading
 coil = "2.7.0"
+# Transitive gesture helper used by forked Compose-Zoom module
+composeExtendedGestures = "2.0.0"
 
 # Coroutines
 coroutines = "1.8.1"
@@ -94,6 +96,9 @@ paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pag
 
 # Coil
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+
+# Gestures helper for local :compose-zoom fork (SmartToolFactory)
+compose-extended-gestures = { module = "com.github.SmartToolFactory:Compose-Extended-Gestures", version.ref = "composeExtendedGestures" }
 
 # Serialization
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }

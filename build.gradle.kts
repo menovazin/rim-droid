@@ -13,6 +13,8 @@ plugins {
 }
 
 subprojects {
+    // Third-party fork: skip project detekt/kover rules (upstream style differs).
+    if (name == "compose-zoom") return@subprojects
     apply(from = "$rootDir/detekt.gradle")
     apply(from = "$rootDir/kover.gradle")
 }

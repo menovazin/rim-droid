@@ -97,6 +97,7 @@ openspec/archive/
 skills-lock.json
 .cline/
 .clinerules/
+.cursor/
 .github/
 .opencode/
 docs/

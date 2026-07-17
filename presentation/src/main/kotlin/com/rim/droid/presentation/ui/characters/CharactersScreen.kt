@@ -18,29 +18,30 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.BrokenImage
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil.compose.SubcomposeAsyncImage
 import com.rim.droid.R
 import com.rim.droid.domain.entity.Character
 import com.rim.droid.presentation.theme.rimColors
+import com.rim.droid.presentation.ui.common.ZoomableNetworkImage
 import com.rim.droid.presentation.util.statusColor
 
 @Composable
@@ -135,48 +136,26 @@ private fun CharacterCard(
     modifier: Modifier = Modifier,
 ) {
     val rimColors = MaterialTheme.rimColors
+    // Raise whole card above LazyGrid siblings while zooming (image-only zIndex is not enough).
+    var zoomActive by remember { mutableStateOf(false) }
 
+    // Background uses shape for rounded chrome but does not clip children, so zoomed
+    // images can overflow the card. Rest-state image rounding is owned by ZoomableNetworkImage.
     Column(
         modifier = modifier
+            .zIndex(if (zoomActive) 1f else 0f)
             .fillMaxWidth()
             .aspectRatio(0.72f)
-            .clip(RoundedCornerShape(12.dp))
-            .background(rimColors.surface)
+            .background(rimColors.surface, RoundedCornerShape(12.dp))
             .clickable(onClick = onClick),
     ) {
-        SubcomposeAsyncImage(
+        ZoomableNetworkImage(
             model = character.image,
             contentDescription = character.name,
-            contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxWidth().weight(1f),
-            loading = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(rimColors.background),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        strokeWidth = 2.dp,
-                        color = rimColors.primary,
-                    )
-                }
-            },
-            error = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(rimColors.background),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.BrokenImage,
-                        contentDescription = null,
-                        tint = rimColors.textSecondary,
-                    )
-                }
-            },
+            clipShape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
+            onClick = onClick,
+            onZoomActiveChange = { zoomActive = it },
         )
         Column(
             modifier = Modifier.padding(start = 10.dp, top = 8.dp, end = 10.dp, bottom = 10.dp),

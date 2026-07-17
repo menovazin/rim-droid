@@ -29,6 +29,8 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            // Debug signing so installRelease / run.sh --release work locally.
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 
@@ -75,8 +77,9 @@ dependencies {
     implementation(libs.paging.runtime)
     implementation(libs.paging.compose)
 
-    // Coil
+    // Coil + zoom (local Compose-Zoom fork)
     implementation(libs.coil.compose)
+    implementation(project(":compose-zoom"))
 
     // Hilt
     implementation(libs.hilt.android)

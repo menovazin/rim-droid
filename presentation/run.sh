@@ -1,25 +1,41 @@
 #!/usr/bin/env bash
-# run.sh — Build and launch the Android debug app from the presentation module.
-# Usage: ./run.sh [--help]
+# run.sh — Build and launch the Android app from the presentation module.
+# Usage: ./run.sh [--release] [--help]
 
 set -euo pipefail
 
-# --- Help ---
-if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
-  cat <<EOF
-Usage: $(basename "$0") [--help]
+BUILD_TYPE="debug"
 
-Build and install the Android debug APK for the presentation module,
+# --- Parse args ---
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h|--help)
+      cat <<EOF
+Usage: $(basename "$0") [--release] [--help]
+
+Build and install the Android APK for the presentation module,
 then launch the main Activity on the connected device/emulator.
 
 Options:
+  --release     Build and install the release APK (default: debug)
   -h, --help    Show this help message and exit
 
 Environment variables:
   APPLICATION_ID   Override the application ID (default: com.rim.droid)
 EOF
-  exit 0
-fi
+      exit 0
+      ;;
+    --release)
+      BUILD_TYPE="release"
+      shift
+      ;;
+    *)
+      echo "Error: unknown option: $1" >&2
+      echo "Run '$(basename "$0") --help' for usage." >&2
+      exit 1
+      ;;
+  esac
+done
 
 # --- Resolve project root ---
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -50,12 +66,18 @@ if [[ -z "$APP_ID" ]]; then
 fi
 APP_ID="${APP_ID:-com.rim.droid}"
 
-echo "Building and installing presentation module..."
+if [[ "$BUILD_TYPE" == "release" ]]; then
+  GRADLE_TASK=":presentation:installRelease"
+else
+  GRADLE_TASK=":presentation:installDebug"
+fi
+
+echo "Building and installing presentation module ($BUILD_TYPE)..."
 echo "Application ID: $APP_ID"
 
 # --- Build and install ---
 cd "$PROJECT_ROOT"
-if ! ./gradlew :presentation:installDebug; then
+if ! ./gradlew "$GRADLE_TASK"; then
   echo "Error: Gradle build/install failed." >&2
   exit 1
 fi

@@ -1,72 +1,57 @@
-# RIM — Rick and Morty Explorer (Android)
+# Rim and Morty (Android+Compose)
 
-Нативный Android-порт приложения RIM с Flutter на Kotlin + Jetpack Compose, построенный по принципам Clean Architecture.
+## Краткое описание
 
-## Стек
+Нативное Android-приложение (Kotlin + Jetpack Compose) для просмотра персонажей, эпизодов и локаций вселенной Rick and Morty. Clean Architecture, многомодульная структура; feature-parity с product-фронтами линейки (Hilt, ViewModel, Paging3).
 
-| Компонент | Технология |
-|---|---|
-| Язык | Kotlin 2.0 |
-| UI | Jetpack Compose (Material 3) |
-| Архитектура | Clean Architecture (многомодульная) |
-| DI | Hilt |
-| Навигация | Navigation Compose (type-safe routes) |
-| Сеть | Retrofit + OkHttp |
-| Пагинация | Paging3 |
-| Изображения | Coil |
-| Безопасное хранилище | EncryptedSharedPreferences |
-| Линт | Detekt |
-| Покрытие | Kover |
-| Тесты | JUnit + Mockito + Truth + Turbine |
+---
 
-## Структура модулей
+## Стек технологий
 
-```
-rim_droid/
-├── domain/        ← Чистый Kotlin: сущности, интерфейсы репозиториев, use-case'ы
-├── data/          ← Retrofit API, DTO, мапперы, PagingSource, реализации репозиториев
-├── presentation/  ← Compose UI, ViewModel'и, Hilt DI, навигация
-└── core-test/     ← Общие тестовые зависимости и хелперы
-```
+| Слой | Технология | Назначение |
+|---|---|---|
+| Язык | Kotlin 2.0 | Основной язык |
+| UI | Jetpack Compose (Material 3) | Декларативный UI |
+| DI | Hilt | Внедрение зависимостей |
+| Состояние / async | ViewModel + Kotlin Coroutines + Flow | UI-state, Paging |
+| Пагинация | Paging3 | Бесконечная прокрутка каталогов |
+| Сеть | Retrofit + OkHttp | HTTP-клиент |
+| Изображения | Coil | Загрузка аватарок |
+| Хранение | EncryptedSharedPreferences | Токен fake-login |
+| Навигация | Navigation Compose | Type-safe routes |
 
-**Правила зависимостей:** `domain` → ничего; `data` → `domain`; `presentation` → `domain` + `data`.
+---
+
+## Особенности
+
+- **Многомодульная архитектура:** `domain` → `data` → `presentation` (`core-test` — общие тестовые зависимости).
+- **Fake-login** — экран входа, токен (UUID) в EncryptedSharedPreferences; при наличии токена старт с Home.
+- **Characters: адаптивный grid** — `LazyVerticalGrid`, 1–6 колонок по ширине; Episodes и Locations — списки с той же пагинацией.
+- **Пагинация (infinite scroll)** — Paging3.
+- **Pinch-to-zoom** — изображения Character через локальный fork [:compose-zoom](https://github.com/SmartToolFactory/Compose-Zoom) с исправлением приоритета pinch-жеста в скролимом контейнере.
+- **Боковое меню** — `ModalNavigationDrawer`: Characters, Episodes, Locations, Logout.
+- **Тема** — light / dark / system (persist).
+- **Локализация** — English-only (`values/strings.xml`; `resourceConfigurations = en`).
+- **API:** `https://alpha.syazy.com:1180/api` (контракт, совместимый с Rick and Morty API; backend линейки — [rim-backend](https://github.com/menovazin/rim-backend)).
+
+---
 
 ## Запуск
 
+Требуется **JDK 18** и Android SDK (compileSdk 35, minSdk 26, targetSdk 34).
+
 ```bash
-# Сборка debug APK
-./gradlew assembleDebug
-
-# Статический анализ
-./gradlew detekt
-
-# Unit-тесты
-./gradlew test
-
-# Отчёт покрытия
-./gradlew koverHtmlReport
+./gradlew assembleDebug        # Сборка debug APK
+./gradlew detekt               # Статический анализ
+./gradlew test                 # Unit-тесты
+./gradlew koverHtmlReport      # Отчёт покрытия
+./presentation/run.sh          # install + launch debug (device/emulator)
+./presentation/run.sh --release # install + launch release
 ```
 
-Требуется JDK 17+ и Android SDK (compileSdk 34).
+---
 
-## Фичи
+## Ссылки
 
-- **Fake-login** — экран входа с генерацией токена в EncryptedSharedPreferences
-- **Splash-гейт** — автоматический редирект по наличию токена
-- **Боковое меню** — ModalNavigationDrawer с разделами: Персонажи, Эпизоды, Локации, Выйти
-- **Адаптивная сетка** — LazyVerticalGrid (1–6 колонок по ширине экрана)
-- **Paging3** — бесконечная прокрутка для всех каталогов
-- **Detail-экраны** — с pinch-to-zoom, иконками пола/типа, аватарками
-- **Визуальное обогащение** — CDN аватарки, парсинг S01E01, иконки типа локации
-- **Локализация** — EN/ES (values, values-es)
-
-## API
-
-- Rick and Morty REST API: https://rickandmortyapi.com/api
-- CDN аватарок: `https://semester.syazy.com/rickandmorty/{id}.jpeg`
-
-## Референсы
-
-- `arch-refs/rim-flutter` — исходная Flutter-реализация (только чтение)
-- `arch-refs/android-template` — эталонный Android-шаблон AliAsadi (только чтение)
-- `openspec/changes/port-rim-to-android-native/` — OpenSpec-артефакты портирования
+- Хаб: https://github.com/menovazin/rim-main
+- Бэкенд: https://github.com/menovazin/rim-backend

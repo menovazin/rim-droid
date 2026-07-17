@@ -21,8 +21,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.outlined.BrokenImage
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,16 +35,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import coil.compose.SubcomposeAsyncImage
 import com.rim.droid.R
 import com.rim.droid.domain.entity.Character
 import com.rim.droid.presentation.theme.rimColors
 import com.rim.droid.presentation.ui.common.DetailChip
 import com.rim.droid.presentation.ui.common.DetailInfoRow
 import com.rim.droid.presentation.ui.common.DetailSectionTitle
+import com.rim.droid.presentation.ui.common.ZoomableNetworkImage
 import com.rim.droid.presentation.util.genderSymbol
 import com.rim.droid.presentation.util.statusColor
 
@@ -158,38 +155,12 @@ private fun CharacterImage(
     characterName: String,
     modifier: Modifier = Modifier,
 ) {
-    val rimColors = MaterialTheme.rimColors
-    Box(
+    ZoomableNetworkImage(
+        model = imageUrl,
+        contentDescription = characterName,
         modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
             .aspectRatio(1f)
             .fillMaxWidth(),
-    ) {
-        SubcomposeAsyncImage(
-            model = imageUrl,
-            contentDescription = characterName,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize(),
-            loading = {
-                Box(
-                    modifier = Modifier.fillMaxSize().background(rimColors.surface),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    CircularProgressIndicator(color = rimColors.primary)
-                }
-            },
-            error = {
-                Box(
-                    modifier = Modifier.fillMaxSize().background(rimColors.surface),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.BrokenImage,
-                        contentDescription = null,
-                        tint = rimColors.textSecondary,
-                    )
-                }
-            },
-        )
-    }
+        clipShape = RoundedCornerShape(16.dp),
+    )
 }
