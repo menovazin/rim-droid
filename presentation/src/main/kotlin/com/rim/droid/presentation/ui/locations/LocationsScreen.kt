@@ -55,13 +55,12 @@ fun LocationsScreen(
                 )
             }
             locations.loadState.refresh is LoadState.Error -> {
-                val error = (locations.loadState.refresh as LoadState.Error).error
                 Column(
                     modifier = Modifier.align(Alignment.Center),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
-                        text = stringResource(R.string.state_error_message, error.localizedMessage ?: ""),
+                        text = stringResource(R.string.state_error_generic),
                         color = rimColors.textSecondary,
                     )
                     Button(
@@ -80,7 +79,10 @@ fun LocationsScreen(
                     contentPadding = PaddingValues(12.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
-                    items(locations.itemCount) { index ->
+                    items(
+                        count = locations.itemCount,
+                        key = { index -> locations[index]?.id ?: "placeholder-$index" },
+                    ) { index ->
                         locations[index]?.let { location ->
                             LocationCard(
                                 location = location,

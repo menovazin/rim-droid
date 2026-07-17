@@ -215,7 +215,10 @@ private fun EpisodeCharactersSection(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(vertical = 4.dp),
             ) {
-                items(episode.characterIds) { characterId ->
+                items(
+                    items = episode.characterIds,
+                    key = { it },
+                ) { characterId ->
                     CharacterAvatarCircle(characterId = characterId, name = "#$characterId")
                 }
             }

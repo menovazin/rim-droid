@@ -47,7 +47,6 @@ import com.rim.droid.presentation.theme.rimColors
 import com.rim.droid.presentation.ui.common.DetailChip
 import com.rim.droid.presentation.ui.common.DetailInfoRow
 import com.rim.droid.presentation.ui.common.DetailSectionTitle
-import com.rim.droid.data.util.AvatarUrlUtils
 import com.rim.droid.presentation.util.genderSymbol
 import com.rim.droid.presentation.util.statusColor
 
@@ -161,7 +160,7 @@ private fun CharacterImage(imageUrl: String, characterName: String) {
             .fillMaxWidth(),
     ) {
         SubcomposeAsyncImage(
-            model = AvatarUrlUtils.getCustomAvatarUrl(imageUrl),
+            model = imageUrl,
             contentDescription = characterName,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),

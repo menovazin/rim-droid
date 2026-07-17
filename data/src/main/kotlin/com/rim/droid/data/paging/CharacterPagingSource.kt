@@ -5,6 +5,7 @@ import androidx.paging.PagingState
 import com.rim.droid.data.api.RickAndMortyApi
 import com.rim.droid.data.mapper.toDomain
 import com.rim.droid.domain.entity.Character
+import kotlinx.coroutines.CancellationException
 
 /**
  * Paging source backed by the `?page=N` Rick and Morty character endpoint.
@@ -29,6 +30,8 @@ class CharacterPagingSource(
                 prevKey = if (page == FIRST_PAGE) null else page - 1,
                 nextKey = if (response.info.next == null) null else page + 1,
             )
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             LoadResult.Error(e)
         }

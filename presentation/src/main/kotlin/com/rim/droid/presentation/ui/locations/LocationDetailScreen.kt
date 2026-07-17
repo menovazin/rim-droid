@@ -221,7 +221,10 @@ private fun LocationResidentsSection(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(vertical = 4.dp),
             ) {
-                items(location.residentIds) { residentId ->
+                items(
+                    items = location.residentIds,
+                    key = { it },
+                ) { residentId ->
                     CharacterAvatarCircle(characterId = residentId, name = "#$residentId")
                 }
             }

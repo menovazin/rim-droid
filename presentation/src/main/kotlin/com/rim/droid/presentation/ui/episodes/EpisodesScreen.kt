@@ -59,13 +59,12 @@ fun EpisodesScreen(
                 )
             }
             episodes.loadState.refresh is LoadState.Error -> {
-                val error = (episodes.loadState.refresh as LoadState.Error).error
                 Column(
                     modifier = Modifier.align(Alignment.Center),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
-                        text = stringResource(R.string.state_error_message, error.localizedMessage ?: ""),
+                        text = stringResource(R.string.state_error_generic),
                         color = rimColors.textSecondary,
                     )
                     Button(
@@ -84,7 +83,10 @@ fun EpisodesScreen(
                     contentPadding = PaddingValues(12.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
-                    items(episodes.itemCount) { index ->
+                    items(
+                        count = episodes.itemCount,
+                        key = { index -> episodes[index]?.id ?: "placeholder-$index" },
+                    ) { index ->
                         episodes[index]?.let { episode ->
                             EpisodeCard(
                                 episode = episode,

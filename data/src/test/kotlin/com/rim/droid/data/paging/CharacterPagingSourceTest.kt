@@ -79,6 +79,15 @@ class CharacterPagingSourceTest : BaseTest() {
     }
 
     @Test
+    fun `load rethrows CancellationException`() = runUnconfinedTest {
+        val thrown = kotlinx.coroutines.CancellationException("cancelled")
+        whenever(api.getCharacters(any())).thenThrow(thrown)
+
+        val outcome = runCatching { source.load(refresh()) }
+        assertThat(outcome.exceptionOrNull()).isSameInstanceAs(thrown)
+    }
+
+    @Test
     fun `getRefreshKey returns key from anchor position`() {
         val state = PagingState(
             pages = listOf(

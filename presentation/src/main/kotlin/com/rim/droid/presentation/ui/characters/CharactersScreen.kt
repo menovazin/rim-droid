@@ -41,7 +41,6 @@ import coil.compose.SubcomposeAsyncImage
 import com.rim.droid.R
 import com.rim.droid.domain.entity.Character
 import com.rim.droid.presentation.theme.rimColors
-import com.rim.droid.data.util.AvatarUrlUtils
 import com.rim.droid.presentation.util.statusColor
 
 @Composable
@@ -62,13 +61,12 @@ fun CharactersScreen(
                 )
             }
             characters.loadState.refresh is LoadState.Error -> {
-                val error = (characters.loadState.refresh as LoadState.Error).error
                 Column(
                     modifier = Modifier.align(Alignment.Center),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
-                        text = stringResource(R.string.state_error_message, error.localizedMessage ?: ""),
+                        text = stringResource(R.string.state_error_generic),
                         color = rimColors.textSecondary,
                     )
                     Button(
@@ -89,7 +87,10 @@ fun CharactersScreen(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
-                    items(characters.itemCount) { index ->
+                    items(
+                        count = characters.itemCount,
+                        key = { index -> characters[index]?.id ?: "placeholder-$index" },
+                    ) { index ->
                         characters[index]?.let { character ->
                             CharacterCard(
                                 character = character,
@@ -143,7 +144,7 @@ private fun CharacterCard(
             .clickable(onClick = onClick),
     ) {
         SubcomposeAsyncImage(
-            model = AvatarUrlUtils.getCustomAvatarUrl(character.image),
+            model = character.image,
             contentDescription = character.name,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxWidth().weight(1f),

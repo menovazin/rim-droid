@@ -21,7 +21,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.rim.droid.presentation.theme.rimColors
-import com.rim.droid.data.util.AvatarUrlUtils
 
 @Composable
 fun CharacterAvatarCircle(
@@ -29,6 +28,7 @@ fun CharacterAvatarCircle(
     name: String?,
     modifier: Modifier = Modifier,
 ) {
+    val avatarUrl = LocalAvatarUrlProvider.current.fromCharacterId(characterId)
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.width(56.dp),
@@ -41,7 +41,7 @@ fun CharacterAvatarCircle(
             contentAlignment = Alignment.Center,
         ) {
             SubcomposeAsyncImage(
-                model = AvatarUrlUtils.avatarUrlFromId(characterId),
+                model = avatarUrl,
                 contentDescription = name,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.size(48.dp),

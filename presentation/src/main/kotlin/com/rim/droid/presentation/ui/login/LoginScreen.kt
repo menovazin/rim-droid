@@ -51,12 +51,15 @@ fun LoginScreen(
     viewModel: LoginViewModel,
     onLoginSuccess: () -> Unit,
 ) {
-    val isLoggedIn by viewModel.isLoggedIn.collectAsStateWithLifecycle()
     val isSubmitting by viewModel.isSubmitting.collectAsStateWithLifecycle()
     var name by remember { mutableStateOf("") }
 
-    LaunchedEffect(isLoggedIn) {
-        if (isLoggedIn) onLoginSuccess()
+    LaunchedEffect(viewModel) {
+        viewModel.uiEvents.collect { event ->
+            when (event) {
+                LoginUiEvent.NavigateHome -> onLoginSuccess()
+            }
+        }
     }
 
     val colors = MaterialTheme.rimColors

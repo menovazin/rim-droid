@@ -5,6 +5,7 @@ import androidx.paging.PagingState
 import com.rim.droid.data.api.RickAndMortyApi
 import com.rim.droid.data.mapper.toDomain
 import com.rim.droid.domain.entity.Location
+import kotlinx.coroutines.CancellationException
 
 class LocationPagingSource(
     private val api: RickAndMortyApi,
@@ -26,6 +27,8 @@ class LocationPagingSource(
                 prevKey = if (page == FIRST_PAGE) null else page - 1,
                 nextKey = if (response.info.next == null) null else page + 1,
             )
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             LoadResult.Error(e)
         }

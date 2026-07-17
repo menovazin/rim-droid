@@ -2,6 +2,7 @@ package com.rim.droid.data.util
 
 import com.google.common.truth.Truth.assertThat
 import com.rim.droid.domain.util.Result
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import java.io.IOException
@@ -33,5 +34,12 @@ class SafeApiCallTest {
         assertThat(result).isInstanceOf(Result.Error::class.java)
         assertThat((result as Result.Error).error).isInstanceOf(IllegalStateException::class.java)
         assertThat(result.error).isSameInstanceAs(thrown)
+    }
+
+    @Test
+    fun `safeApiCall rethrows CancellationException`() = runTest {
+        val thrown = CancellationException("cancelled")
+        val outcome = runCatching { safeApiCall { throw thrown } }
+        assertThat(outcome.exceptionOrNull()).isSameInstanceAs(thrown)
     }
 }
