@@ -1,8 +1,10 @@
-# Rim and Morty (Android+Compose)
+# RIM (Android+Compose)
 
 ## Краткое описание
 
-Нативное Android-приложение (Kotlin + Jetpack Compose) для просмотра персонажей, эпизодов и локаций вселенной Rick and Morty. Clean Architecture, многомодульная структура; feature-parity с product-фронтами линейки (Hilt, ViewModel, Paging3).
+Нативное Android-приложение (Kotlin + Jetpack Compose) для просмотра персонажей, эпизодов и локаций вселенной Rick and Morty. Clean Architecture, многомодульная структура (Hilt, ViewModel, Paging3).
+
+Для увеличения фото персонажа используется доработанный fork [Compose-Zoom](https://github.com/SmartToolFactory/Compose-Zoom): в исходной версии жест pinch часто проигрывал скроллу списка/экрана; в форке приоритет pinch-жеста в скроллируемом контейнере исправлен.
 
 ---
 
@@ -19,6 +21,7 @@
 | Изображения | Coil | Загрузка аватарок |
 | Хранение | EncryptedSharedPreferences | Токен fake-login |
 | Навигация | Navigation Compose | Type-safe routes |
+| Zoom | локальный fork Compose-Zoom | Pinch-to-zoom на detail |
 
 ---
 
@@ -28,11 +31,10 @@
 - **Fake-login** — экран входа, токен (UUID) в EncryptedSharedPreferences; при наличии токена старт с Home.
 - **Characters: адаптивный grid** — `LazyVerticalGrid`, 1–6 колонок по ширине; Episodes и Locations — списки с той же пагинацией.
 - **Пагинация (infinite scroll)** — Paging3.
-- **Pinch-to-zoom** — изображения Character через локальный fork [:compose-zoom](https://github.com/SmartToolFactory/Compose-Zoom) с исправлением приоритета pinch-жеста в скролимом контейнере.
+- **Pinch-to-zoom** — изображения Character через локальный fork Compose-Zoom (исправление приоритета pinch в скролле).
 - **Боковое меню** — `ModalNavigationDrawer`: Characters, Episodes, Locations, Logout.
 - **Тема** — light / dark / system (persist).
 - **Локализация** — English-only (`values/strings.xml`; `resourceConfigurations = en`).
-- **API:** `https://alpha.syazy.com:1180/api` (контракт, совместимый с Rick and Morty API; backend линейки — [rim-backend](https://github.com/menovazin/rim-backend)).
 
 ---
 
