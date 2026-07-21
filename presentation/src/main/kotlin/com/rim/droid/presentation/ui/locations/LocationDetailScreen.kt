@@ -6,7 +6,6 @@ import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,13 +21,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,7 +36,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
@@ -49,6 +47,7 @@ import com.rim.droid.R
 import com.rim.droid.domain.entity.Location
 import com.rim.droid.presentation.theme.RimDesignTokens
 import com.rim.droid.presentation.theme.rimColors
+import com.rim.droid.presentation.theme.rimDetailHeroGradient
 import com.rim.droid.presentation.ui.common.CharacterAvatarCircle
 import com.rim.droid.presentation.util.locationTypeIcon
 
@@ -72,12 +71,18 @@ fun LocationDetailScreen(
                 title = {
                     Text(
                         text = location.name,
+                        style = MaterialTheme.typography.titleLarge,
+                        color = rimColors.textPrimary,
+                        fontWeight = FontWeight.W700,
                         textAlign = TextAlign.Center,
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.action_back),
+                        )
                     }
                 },
                 actions = {
@@ -103,6 +108,7 @@ fun LocationDetailScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
+                .padding(16.dp)
                 .pointerInput(Unit) {
                     detectTransformGestures { _, _, zoom, _ ->
                         scale = (scale * zoom).coerceIn(0.5f, 3f)
@@ -116,6 +122,7 @@ fun LocationDetailScreen(
                 dim = dim,
                 rimColors = rimColors,
             )
+            Spacer(modifier = Modifier.height(24.dp))
             LocationResidentsSection(location = location, rimColors = rimColors)
         }
     }
@@ -132,14 +139,12 @@ private fun LocationHeaderCard(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp)
             .clip(RoundedCornerShape(16.dp))
             .background(
-                Brush.linearGradient(
-                    colors = listOf(
-                        rimColors.secondary.copy(alpha = 0.15f),
-                        rimColors.surface,
-                    ),
+                rimDetailHeroGradient(
+                    accent = rimColors.secondary,
+                    surface = rimColors.surface,
+                    background = rimColors.background,
                 ),
             )
             .padding(20.dp),
@@ -159,7 +164,7 @@ private fun LocationHeaderCard(
                 fontWeight = FontWeight.W700,
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Row {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 // Type badge (filled)
                 Box(
                     modifier = Modifier
@@ -174,7 +179,6 @@ private fun LocationHeaderCard(
                         fontWeight = FontWeight.W600,
                     )
                 }
-                Spacer(modifier = Modifier.size(8.dp))
                 // Dimension badge (outlined)
                 Box(
                     modifier = Modifier
@@ -204,7 +208,7 @@ private fun LocationResidentsSection(
     rimColors: RimDesignTokens,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier.padding(16.dp)) {
+    Column(modifier = modifier) {
         Text(
             text = stringResource(R.string.section_residents_count, location.residentIds.size),
             style = MaterialTheme.typography.titleMedium,
@@ -220,8 +224,8 @@ private fun LocationResidentsSection(
             )
         } else {
             LazyRow(
+                modifier = Modifier.height(72.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(vertical = 4.dp),
             ) {
                 items(
                     items = location.residentIds,
