@@ -96,7 +96,8 @@ fun CharacterDetailScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
         ) {
             CharacterImage(imageUrl = character.image, characterName = character.name)
 
@@ -119,29 +120,27 @@ fun CharacterDetailScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                DetailInfoRow(label = stringResource(R.string.detail_species), value = character.species)
-                if (character.type.isNotBlank()) {
-                    DetailInfoRow(label = stringResource(R.string.detail_type), value = character.type)
-                }
-                DetailInfoRow(
-                    label = stringResource(R.string.detail_gender),
-                    value = "${character.gender.genderSymbol()}  ${character.gender}",
-                )
-                DetailInfoRow(label = stringResource(R.string.detail_origin), value = character.origin)
-                DetailInfoRow(label = stringResource(R.string.detail_location), value = character.location)
+            DetailInfoRow(label = stringResource(R.string.detail_species), value = character.species)
+            if (character.type.isNotBlank()) {
+                DetailInfoRow(label = stringResource(R.string.detail_type), value = character.type)
+            }
+            DetailInfoRow(
+                label = stringResource(R.string.detail_gender),
+                value = "${character.gender.genderSymbol()}  ${character.gender}",
+            )
+            DetailInfoRow(label = stringResource(R.string.detail_origin), value = character.origin)
+            DetailInfoRow(label = stringResource(R.string.detail_location), value = character.location)
 
-                if (character.episodeIds.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    DetailSectionTitle(title = stringResource(R.string.section_episodes_count, character.episodeIds.size))
-                    Spacer(modifier = Modifier.height(8.dp))
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        character.episodeIds.forEach { id ->
-                            DetailChip(label = "E${id.toString().padStart(2, '0')}")
-                        }
+            if (character.episodeIds.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(16.dp))
+                DetailSectionTitle(title = stringResource(R.string.section_episodes_count, character.episodeIds.size))
+                Spacer(modifier = Modifier.height(8.dp))
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    character.episodeIds.forEach { id ->
+                        DetailChip(label = "E${id.toString().padStart(2, '0')}")
                     }
                 }
             }
